@@ -10,12 +10,12 @@ class Config(object):
         self.validDataPath = self.dataPath + "/HWDB1.1tst_gnt"
         # self.annoPath = "./annotations/imglist_anno_12.txt"
         self.manualSeed = 1  # manually set RNG seed
-        self.use_cuda = False
-        self.GPU = "0, 1"  # default gpu to use
+        self.use_cuda = True
+        self.GPU = "0"  # default gpu to use
 
         # ------------- Data options -------------------------------------------
         self.nThreads = 2  # number of data loader threads
-        self.random_size = 500 #number of random select Chinese
+        self.random_size = 300 #number of random select Chinese
         self.resize_size = 114
 
         # ---------- Optimization options --------------------------------------

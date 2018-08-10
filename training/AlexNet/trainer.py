@@ -20,8 +20,8 @@ class AlexNetTrainer(object):
         self.scalar_info = {}
 
     def compute_accuracy(self, prob_cls, gt_cls):
-        pred_cls = torch.max(prob_cls, 1)[1].squeeze().data.numpy()
-        accuracy = float((pred_cls == gt_cls.data.numpy()).astype(int).sum()) / float(gt_cls.size(0))
+        pred_cls = torch.max(prob_cls, 1)[1].squeeze()
+        accuracy = float((pred_cls == gt_cls).sum()) / float(gt_cls.size(0))
         return accuracy
 
     def update_lr(self, epoch):

@@ -8,8 +8,8 @@ class Config(object):
         self.dataPath = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))+"/data/mnist/"
         # self.annoPath = "./annotations/imglist_anno_12.txt"
         self.manualSeed = 1  # manually set RNG seed
-        self.use_cuda = False
-        self.GPU = "0, 1"  # default gpu to use
+        self.use_cuda = True
+        self.GPU = "0"  # default gpu to use
 
         # ------------- Data options -------------------------------------------
         self.nThreads = 2  # number of data loader threads
@@ -23,7 +23,7 @@ class Config(object):
         self.batchSize = 64  # mini-batch size 128
 
         # lr master for optimizer 1 (mask vector d)
-        self.lr = 0.001  # initial learning rate
+        self.lr = 0.01  # initial learning rate
         self.step = [10, 25, 40]  # step for linear or exp learning rate policy
         self.decayRate = 0.1  # lr decay rate
         self.endlr = -1

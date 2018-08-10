@@ -42,6 +42,13 @@ class AlexNet(nn.Module):
             nn.ReLU(),
         )  # output shape(256, 3, 3)
 
+        self.conv_small = nn.Sequential(
+            nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1, bias=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+        )  # output shape(256, 3, 3)
+
 
 
         self.fc = nn.Sequential(
@@ -64,6 +71,7 @@ class AlexNet(nn.Module):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.conv5(x)
+        # x = self.conv_small(x)
         x = x.view(x.size(0), -1)
         output = self.fc(x)                         # flatten the output of conv2 to (batch_size, 256*3*3)
         return output

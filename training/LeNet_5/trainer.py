@@ -21,14 +21,13 @@ class LeNet_5Trainer(object):
         self.scalar_info = {}
 
     def compute_accuracy(self, prob_cls, gt_cls):
-        pred_cls = torch.max(prob_cls, 1)[1].squeeze().data.numpy()
-        accuracy = float((pred_cls == gt_cls.data.numpy()).astype(int).sum()) / float(gt_cls.size(0))
+        pred_cls = torch.max(prob_cls, 1)[1].squeeze()
+        accuracy = float((pred_cls == gt_cls).sum()) / float(gt_cls.size(0))
         return accuracy
 
     def train(self, epoch):
         cls_loss_ = AverageMeter()
         accuracy_ = AverageMeter()
-        accuracy_valid_ = AverageMeter()
 
         self.model.train()
 
@@ -49,13 +48,10 @@ class LeNet_5Trainer(object):
             accuracy_.update(accuracy, data.size(0))
 
             if batch_idx % 50 == 0:
-                valid_pred = self.model(self.valid_x)
-                accuracy_valid = self.compute_accuracy(valid_pred, self.valid_y)
-                print('Train Epoch: {} [{}/{} ({:.0f}%)]\tTrain Loss: {:.6f}\tTrain Accuracy: {:.6f}\tValid Accuracy: {:.6f}'.format(
-                    epoch, batch_idx * len(data), len(self.train_loader.dataset),
-                    100. * batch_idx / len(self.train_loader), cls_loss.item(), accuracy, accuracy_valid))
 
-                accuracy_valid_.update(accuracy_valid, data.size(0))
+                print('Train Epoch: {} [{}/{} ({:.0f}%)]\tTrain Loss: {:.6f}\tTrain Accuracy: {:.6f}'.format(
+                    epoch, batch_idx * len(data), len(self.train_loader.dataset),
+                    100. * batch_idx / len(self.train_loader), cls_loss.item(), accuracy))
 
 
         self.scalar_info['cls_loss'] = cls_loss_.avg
@@ -68,11 +64,6 @@ class LeNet_5Trainer(object):
         #     self.scalar_info = {}
         # self.run_count += 1
 
-        print("|===>Loss: {:.4f}   Train Accuracy: {:.6f}   valid Accuracy: {:.6f}".format(cls_loss_.avg, accuracy_.avg, accuracy_valid_.avg))
+        print("|===>Loss: {:.4f}   Train Accuracy: {:.6f} ".format(cls_loss_.avg, accuracy_.avg))
 
-        valid_output = self.model(self.valid_x[:10])
-        pred_y = torch.max(valid_output, 1)[1].squeeze().data.numpy()
-        print(pred_y, "prediction number")
-        print(self.valid_y[:10].numpy(), "real number")
-
-        return cls_loss_.avg, accuracy_.avg, accuracy_valid_.avg
+        return cls_loss_.avg, accuracy_.avg
