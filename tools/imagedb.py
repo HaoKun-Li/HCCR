@@ -6,6 +6,8 @@ import PIL.Image
 import random
 from training.AlexNet.config import Config
 import torch
+import cv2
+import time
 
 
 config = Config()
@@ -36,6 +38,108 @@ def read_from_gnt_dir(gnt_dir):
                 for image, tagcode in one_file(f):
                     yield image, tagcode
 
+
+#梯度特征提取
+def sobel_1(image):
+    gradient = np.zeros(image.shape, dtype='float32')
+    for i in range(1, image.shape[0]-1):
+        for j in range(1, image.shape[1]-1):
+            gradient[i][j] = image[i-1][j-1]*(-1) + image[i-1][j+1]*1 + image[i][j-1]*(-2) + image[i][j+1] * 2 +\
+                             image[i+1][j-1]*(-1) + image[i+1][j+1]*1
+
+    return gradient
+
+
+def filter_1(image):
+    fil = np.array(
+        [[-1, 0, 1],
+         [-2, 0, 2],
+         [-1, 0, 1]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+def filter_2(image):
+    fil = np.array(
+        [[-2, -1, 0],
+         [-1, 0, 1],
+         [0, 1, 2]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+def filter_3(image):
+    fil = np.array(
+        [[-1, -2, -1],
+         [0, 0, 0],
+         [1, 2, 1]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+def filter_4(image):
+    fil = np.array(
+        [[0, -1, -2],
+         [1, 0, -1],
+         [2, 1, 0]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+def filter_5(image):
+    fil = np.array(
+        [[1, 0, -1],
+         [2, 0, -2],
+         [1, 0, -1]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+def filter_6(image):
+    fil = np.array(
+        [[2, 1, 0],
+         [1, 0, -1],
+         [0, -1, -2]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+def filter_7(image):
+    fil = np.array(
+        [[1, 2, 1],
+         [0, 0, 0],
+         [-1, -2, -1]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+def filter_8(image):
+    fil = np.array(
+        [[0, 1, 2],
+         [-1, 0, 1],
+         [-2, -1, 0]]
+    )
+    res = cv2.filter2D(image, -1, fil)
+
+    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+    return res
+
+
+
  # 统计样本数
 def count_num_sample():
     train_counter = 0
@@ -49,11 +153,54 @@ def count_num_sample():
         train_counter += 1
 
         # 提取部分图像，转为png
-        if train_counter < 200:
+        st = time.time()
+        if train_counter < 10:
             im = PIL.Image.fromarray(image)
             im.convert('RGB').save(config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '.png')
-            im = PIL.Image.fromarray(resize_and_normalize_image(image))
+
+            image = resize_and_normalize_image(image)
+            im = PIL.Image.fromarray(image)
             im.convert('RGB').save(config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize.png')
+
+            image_1 = filter_1(image)
+            im = PIL.Image.fromarray(image_1)
+            im.convert('RGB').save(config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_1.png')
+
+            image_2 = filter_2(image)
+            im = PIL.Image.fromarray(image_2)
+            im.convert('RGB').save(
+                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_2.png')
+
+            image_3 = filter_3(image)
+            im = PIL.Image.fromarray(image_3)
+            im.convert('RGB').save(
+                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_3.png')
+
+            image_4 = filter_4(image)
+            im = PIL.Image.fromarray(image_4)
+            im.convert('RGB').save(
+                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_4.png')
+
+            image_5 = filter_5(image)
+            im = PIL.Image.fromarray(image_5)
+            im.convert('RGB').save(
+                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_5.png')
+
+            image_6 = filter_6(image)
+            im = PIL.Image.fromarray(image_6)
+            im.convert('RGB').save(
+                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_6.png')
+
+            image_7 = filter_7(image)
+            im = PIL.Image.fromarray(image_7)
+            im.convert('RGB').save(
+                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_7.png')
+
+            image_8 = filter_8(image)
+            im = PIL.Image.fromarray(image_8)
+            im.convert('RGB').save(
+                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_8.png')
+
 
     for image, tagcode in read_from_gnt_dir(config.validDataPath):
         tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
@@ -86,8 +233,22 @@ def resize_and_normalize_image(img):
 
     # 像素值范围0到1(Min-max normalization),最亮的设为0， 最暗设为255
     img = (1 - (img - np.min(img)) / (np.max(img) - np.min(img))) * 255
-
+    img = img.astype(np.float32)
     return img
+
+
+def gradient_feature_maps(image):
+
+    image_1 = filter_1(image)
+    image_2 = filter_2(image)
+    image_3 = filter_3(image)
+    image_4 = filter_4(image)
+    image_5 = filter_5(image)
+    image_6 = filter_6(image)
+    image_7 = filter_7(image)
+    image_8 = filter_8(image)
+    images = np.array([image, image_1, image_2, image_3, image_4, image_5, image_6, image_7, image_8])
+    return images
 
 
 def write_char_set():
@@ -156,7 +317,7 @@ def load_data():
     for image, tagcode in read_from_gnt_dir(gnt_dir=config.trainDataPath):
         tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
         if tagcode_unicode in random_set:
-            train_data_x.append(resize_and_normalize_image(image))
+            train_data_x.append(gradient_feature_maps(resize_and_normalize_image(image)))
             train_data_y.append(random_set.index(tagcode_unicode))
             # train_data_y.append(convert_to_one_hot(tagcode_unicode))
 
@@ -168,7 +329,7 @@ def load_data():
     for image, tagcode in read_from_gnt_dir(gnt_dir=config.validDataPath):
         tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
         if tagcode_unicode in random_set:
-            valid_data_x.append(resize_and_normalize_image(image))
+            valid_data_x.append(gradient_feature_maps(resize_and_normalize_image(image)))
             valid_data_y.append(random_set.index(tagcode_unicode))
             # valid_data_y.append(convert_to_one_hot(tagcode_unicode))
 
@@ -182,8 +343,8 @@ def load_data():
     valid_data_y = torch.from_numpy(np.array(valid_data_y)).type(torch.LongTensor)
 
     # 改变输入的张量形状
-    train_data_x = train_data_x.view(-1, 1, config.resize_size, config.resize_size)
-    valid_data_x = valid_data_x.view(-1, 1, config.resize_size, config.resize_size)
+    train_data_x = train_data_x.view(-1, 9, config.resize_size, config.resize_size)
+    valid_data_x = valid_data_x.view(-1, 9, config.resize_size, config.resize_size)
 
     # 生成dataset
     train_dataset = torch.utils.data.TensorDataset(train_data_x, train_data_y)

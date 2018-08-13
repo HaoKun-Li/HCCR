@@ -15,12 +15,12 @@ class Config(object):
 
         # ------------- Data options -------------------------------------------
         self.nThreads = 2  # number of data loader threads
-        self.random_size = 300 #number of random select Chinese
+        self.random_size = 50 #number of random select Chinese
         self.resize_size = 114
 
         # ---------- Optimization options --------------------------------------
-        self.nEpochs = 50  # number of total epochs to train 400
-        self.batchSize = 64  # mini-batch size 128
+        self.nEpochs = 1000  # number of total epochs to train 400
+        self.batchSize = 256  # mini-batch size 128
 
         # lr master for optimizer 1 (mask vector d)
         self.lr = 0.01  # initial learning rate

@@ -11,7 +11,7 @@ class AlexNet(nn.Module):
 
         self.config = Config()
         self.conv1 = nn.Sequential(                     # input shape(1, 114, 114)
-            nn.Conv2d(1, 48, kernel_size=11, stride=4, bias=True),
+            nn.Conv2d(9, 48, kernel_size=11, stride=4, bias=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
             nn.BatchNorm2d(48),
             nn.ReLU(),
@@ -53,9 +53,11 @@ class AlexNet(nn.Module):
 
         self.fc = nn.Sequential(
             nn.Linear(128*3*3, 2048, bias=True),
+            nn.BatchNorm1d(2048),
             nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.Linear(2048, 2048, bias=True),
+            nn.BatchNorm1d(2048),
             nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.Linear(2048, self.config.random_size, bias=True),
