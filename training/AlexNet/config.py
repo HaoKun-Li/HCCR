@@ -16,7 +16,7 @@ class Config(object):
 
         # ------------- Data options -------------------------------------------
         self.nThreads = 2  # number of data loader threads
-        self.random_size = 50 #number of random select Chinese
+        self.random_size = 3755 #number of random select Chinese
         self.resize_size = 114
 
         # ---------- Optimization options --------------------------------------

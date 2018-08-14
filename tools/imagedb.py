@@ -9,9 +9,169 @@ from training.AlexNet.config import Config
 import torch
 import cv2
 import time
+import torch.utils.data as data
+
+
+def png_loader(path):
+    with open(path, 'rb') as f:
+        img = PIL.Image.open(f)
+        return img.convert('L')
+
+class HCDataset(data.Dataset):
+    def __init__(self, image_annotation_file, prefix_path='', transform=None, is_train=False):
+        self.image_annotation_file = image_annotation_file
+        self.prefix_path = prefix_path
+        self.is_train = is_train
+        self.image_set_index = self.load_image_set_index()
+        self.num_images = len(self.image_set_index)
+        self.gt_imdb = self.load_annotations()
+        # if self.is_train:
+        self.transform = transform
+        self.loader = png_loader
+
+
+    def load_image_set_index(self):
+        """Get image index
+
+                Parameters:
+                ----------
+                Returns:
+                -------
+                image_set_index: str
+                    relative path of image
+                """
+        assert os.path.exists(self.image_annotation_file), 'Path does not exist: {}'.format(
+            self.image_annotation_file)
+        with open(self.image_annotation_file, 'r') as f:
+            image_set_index = [x.strip().split(' ')[0] for x in f.readlines()]
+        return image_set_index
+
+
+    def real_image_path(self, index):
+        """Given image index, return full path
+
+        Parameters:
+        ----------
+        index: str
+            relative path of image
+        Returns:
+        -------
+        image_file: str
+            full path of image
+        """
+
+        index = index.replace("\\", "/")
+
+        if not os.path.exists(index):
+            image_file = os.path.join(self.prefix_path, index)
+        else:
+            image_file = index
+        if not image_file.endswith('.png'):
+            image_file = image_file + '.png'
+        assert os.path.exists(
+            image_file), 'Path does not exist: {}'.format(image_file)
+        return image_file
+
+
+    def load_annotations(self):
+        """Load annotations
+
+        Returns:
+        -------
+        imdb: dict
+            image database with annotations
+        """
+
+        assert os.path.exists(self.image_annotation_file), 'annotations not found at {}'.format(
+            self.image_annotation_file)
+        with open(self.image_annotation_file, 'r') as f:
+            annotations = f.readlines()
+
+        with open(config.dataPath + 'char_set', 'r') as f:
+            char_set = f.read()
+            print("read char_set")
+
+        imdb = []
+        for i in range(self.num_images):
+            annotation = annotations[i].strip().split(' ')
+            index = annotation[0]
+            im_path = self.real_image_path(index)
+            imdb_ = dict()
+
+            imdb_['image'] = im_path
+            imdb_['label'] = char_set.index(annotation[1])
+            imdb.append(imdb_)
+        return imdb
+
+
+    def __len__(self):
+        return self.num_images
+
+
+    def __getitem__(self, idx):
+        imdb_ = self.gt_imdb[idx]
+        image = self.loader(imdb_['image'])
+        label = imdb_['label']
+
+        if self.transform:
+            image = self.transform(image)
+        return image, label
+
+
+
+
+
+
+
 
 
 config = Config()
+
+
+# convert to png and record path
+def preprocess_gnt():
+    train_png_path = os.path.join(config.dataPath, 'train_png')
+    if not os.path.isdir(train_png_path):
+        os.makedirs(train_png_path)
+
+    valid_png_path = os.path.join(config.dataPath, 'valid_png')
+    if not os.path.isdir(valid_png_path):
+        os.makedirs(valid_png_path)
+
+    train_annotation = []
+    train_annotation_path = os.path.join(config.dataPath, 'train_png_annotation.txt')
+
+    if not os.path.exists(train_annotation_path):
+        for image, tagcode, file_name in read_from_gnt_dir(config.trainDataPath):
+            tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
+            image = resize_and_normalize_image(image)
+            im = PIL.Image.fromarray(image)
+            im_path = os.path.join(train_png_path, file_name + '_' + tagcode_unicode + '.png')
+            im.convert('L').save(im_path)
+            train_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode_unicode))
+            print(im_path)
+            png_loader(im_path)
+
+
+        with open(train_annotation_path, 'w') as f:
+            for line in train_annotation:
+                f.write(line+'\n')
+
+    valid_annotation = []
+    valid_annotation_path = os.path.join(config.dataPath, 'valid_png_annotation.txt')
+    if not os.path.exists(valid_annotation_path):
+        for image, tagcode, file_name in read_from_gnt_dir(config.validDataPath):
+            tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
+            image = resize_and_normalize_image(image)
+            im = PIL.Image.fromarray(image)
+            im_path = os.path.join(valid_png_path, file_name + '_' + tagcode_unicode + '.png')
+            im.convert('RGB').save(im_path)
+            valid_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode_unicode))
+            print(im_path)
+
+        with open(valid_annotation_path, 'w') as f:
+            for line in valid_annotation:
+                f.write(line+'\n')
 
 # 读取图像和对应的汉字
 def read_from_gnt_dir(gnt_dir):
@@ -35,9 +195,11 @@ def read_from_gnt_dir(gnt_dir):
     for file_name in os.listdir(gnt_dir):
         if file_name.endswith('.gnt'):
             file_path = os.path.join(gnt_dir, file_name)
+            file_name = os.path.split(file_name)[1]
+            file_name = os.path.splitext(file_name)[0]
             with open(file_path, 'rb') as f:
                 for image, tagcode in one_file(f):
-                    yield image, tagcode
+                    yield image, tagcode, file_name
 
 
 #梯度特征提取
@@ -163,46 +325,6 @@ def count_num_sample():
             im = PIL.Image.fromarray(image)
             im.convert('RGB').save(config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize.png')
 
-            image_1 = filter_1(image)
-            im = PIL.Image.fromarray(image_1)
-            im.convert('RGB').save(config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_1.png')
-
-            image_2 = filter_2(image)
-            im = PIL.Image.fromarray(image_2)
-            im.convert('RGB').save(
-                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_2.png')
-
-            image_3 = filter_3(image)
-            im = PIL.Image.fromarray(image_3)
-            im.convert('RGB').save(
-                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_3.png')
-
-            image_4 = filter_4(image)
-            im = PIL.Image.fromarray(image_4)
-            im.convert('RGB').save(
-                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_4.png')
-
-            image_5 = filter_5(image)
-            im = PIL.Image.fromarray(image_5)
-            im.convert('RGB').save(
-                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_5.png')
-
-            image_6 = filter_6(image)
-            im = PIL.Image.fromarray(image_6)
-            im.convert('RGB').save(
-                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_6.png')
-
-            image_7 = filter_7(image)
-            im = PIL.Image.fromarray(image_7)
-            im.convert('RGB').save(
-                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_7.png')
-
-            image_8 = filter_8(image)
-            im = PIL.Image.fromarray(image_8)
-            im.convert('RGB').save(
-                config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize_filter_8.png')
-
-
     for image, tagcode in read_from_gnt_dir(config.validDataPath):
         tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
         valid_counter += 1
@@ -253,14 +375,14 @@ def gradient_feature_maps(image):
 
 
 def write_char_set():
-    if not os.path.exists(config.save_path+'char_set'):
+    if not os.path.exists(config.dataPath+'char_set'):
         char_set = ''
-        for image, tagcode in read_from_gnt_dir(gnt_dir=config.trainDataPath):
+        for image, tagcode, _ in read_from_gnt_dir(gnt_dir=config.trainDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
             if tagcode_unicode not in char_set:
                 char_set += tagcode_unicode
 
-        with open(config.save_path+'char_set', 'w') as f:
+        with open(config.dataPath+'char_set', 'w') as f:
             f.write(char_set)
             print("write char_set")
 
@@ -318,7 +440,7 @@ def load_data():
     for image, tagcode in read_from_gnt_dir(gnt_dir=config.trainDataPath):
         tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
         if tagcode_unicode in random_set:
-            train_data_x.append(gradient_feature_maps(resize_and_normalize_image(image)))
+            train_data_x.append(resize_and_normalize_image(image))
             train_data_y.append(random_set.index(tagcode_unicode))
             # train_data_y.append(convert_to_one_hot(tagcode_unicode))
 
@@ -330,7 +452,7 @@ def load_data():
     for image, tagcode in read_from_gnt_dir(gnt_dir=config.validDataPath):
         tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
         if tagcode_unicode in random_set:
-            valid_data_x.append(gradient_feature_maps(resize_and_normalize_image(image)))
+            valid_data_x.append(resize_and_normalize_image(image))
             valid_data_y.append(random_set.index(tagcode_unicode))
             # valid_data_y.append(convert_to_one_hot(tagcode_unicode))
 
@@ -344,8 +466,8 @@ def load_data():
     valid_data_y = torch.from_numpy(np.array(valid_data_y)).type(torch.LongTensor)
 
     # 改变输入的张量形状
-    train_data_x = train_data_x.view(-1, 9, config.resize_size, config.resize_size)
-    valid_data_x = valid_data_x.view(-1, 9, config.resize_size, config.resize_size)
+    train_data_x = train_data_x.view(-1, 1, config.resize_size, config.resize_size)
+    valid_data_x = valid_data_x.view(-1, 1, config.resize_size, config.resize_size)
 
     # 生成dataset
     train_dataset = torch.utils.data.TensorDataset(train_data_x, train_data_y)

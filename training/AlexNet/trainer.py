@@ -45,9 +45,9 @@ class AlexNetTrainer(object):
         self.model.train()
 
         for batch_idx, (data, gt_label) in enumerate(self.train_loader):
+            print(batch_idx)
             data, gt_label = data.to(self.device), gt_label.to(
                 self.device)
-
             cls_pred = self.model(data)
             # compute the loss
             cls_loss = self.lossfn.cls_loss(gt_label, cls_pred)
