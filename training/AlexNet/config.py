@@ -12,7 +12,7 @@ class Config(object):
         # self.annoPath = "./annotations/imglist_anno_12.txt"
         self.manualSeed = 1  # manually set RNG seed
         self.use_cuda = True
-        self.GPU = "0"  # default gpu to use
+        self.GPU = "3"  # default gpu to use
 
         # ------------- Data options -------------------------------------------
         self.nThreads = 2  # number of data loader threads
@@ -21,12 +21,12 @@ class Config(object):
 
         # ---------- Optimization options --------------------------------------
         self.nEpochs = 1000  # number of total epochs to train 400
-        self.batchSize = 256  # mini-batch size 128
+        self.batchSize = 32  # mini-batch size 128
 
         # lr master for optimizer 1 (mask vector d)
         self.lr = 0.01  # initial learning rate
         self.step = [10, 25, 40]  # step for linear or exp learning rate policy
-        self.decayRate = 0.1  # lr decay rate
+        self.decayRate = 0.5  # lr decay rate
         self.endlr = -1
 
         # ---------- Model options ---------------------------------------------

@@ -11,10 +11,10 @@ from training.AlexNet.config import Config
 from tools.logger import Logger
 from checkpoint import CheckPoint
 import os
-import matplotlib.pyplot as plt
 import tools.imagedb as imagedb
 import time
 import multiprocessing
+
 
 
 if __name__ == '__main__':
@@ -62,6 +62,8 @@ if __name__ == '__main__':
 
     #Set model
     model =AlexNet()
+    para = sum([np.prod(list(p.size())) for p in model.parameters()])
+    print('Model {} : params: {:4f}M'.format(model._get_name(), para * 4 / 1000 / 1000))
     model = model.to(device)
 
     # Set checkpoint

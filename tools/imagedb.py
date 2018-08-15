@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import os
 import numpy as np
 import scipy.misc
@@ -10,6 +11,7 @@ import torch
 import cv2
 import time
 import torch.utils.data as data
+
 
 
 def png_loader(path):
@@ -88,7 +90,7 @@ class HCDataset(data.Dataset):
             annotations = f.readlines()
 
         with open(config.dataPath + 'char_set', 'r') as f:
-            char_set = f.read()
+            char_set = f.read().strip().split(' ')
             print("read char_set")
 
         imdb = []
@@ -115,6 +117,8 @@ class HCDataset(data.Dataset):
 
         if self.transform:
             image = self.transform(image)
+            image = image.type(torch.float32)
+
         return image, label
 
 
@@ -146,9 +150,9 @@ def preprocess_gnt():
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
             image = resize_and_normalize_image(image)
             im = PIL.Image.fromarray(image)
-            im_path = os.path.join(train_png_path, file_name + '_' + tagcode_unicode + '.png')
+            im_path = os.path.join(train_png_path, file_name + '_' + str(tagcode) + '.png')
             im.convert('L').save(im_path)
-            train_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode_unicode))
+            train_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode))
             print(im_path)
             png_loader(im_path)
 
@@ -164,9 +168,9 @@ def preprocess_gnt():
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
             image = resize_and_normalize_image(image)
             im = PIL.Image.fromarray(image)
-            im_path = os.path.join(valid_png_path, file_name + '_' + tagcode_unicode + '.png')
+            im_path = os.path.join(valid_png_path, file_name + '_' + str(tagcode) + '.png')
             im.convert('RGB').save(im_path)
-            valid_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode_unicode))
+            valid_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode))
             print(im_path)
 
         with open(valid_annotation_path, 'w') as f:
@@ -376,14 +380,15 @@ def gradient_feature_maps(image):
 
 def write_char_set():
     if not os.path.exists(config.dataPath+'char_set'):
-        char_set = ''
+        char_set = []
         for image, tagcode, _ in read_from_gnt_dir(gnt_dir=config.trainDataPath):
-            tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
-            if tagcode_unicode not in char_set:
-                char_set += tagcode_unicode
+            # tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
+            if tagcode not in char_set:
+                char_set.append(tagcode)
 
         with open(config.dataPath+'char_set', 'w') as f:
-            f.write(char_set)
+            for line in char_set:
+                f.write(str(line)+' ')
             print("write char_set")
 
         print('char_set_length: '+str(len(char_set)))

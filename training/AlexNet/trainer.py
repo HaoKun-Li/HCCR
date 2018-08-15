@@ -45,6 +45,7 @@ class AlexNetTrainer(object):
         self.model.train()
 
         for batch_idx, (data, gt_label) in enumerate(self.train_loader):
+            
             print(batch_idx)
             data, gt_label = data.to(self.device), gt_label.to(
                 self.device)
@@ -57,7 +58,7 @@ class AlexNetTrainer(object):
             cls_loss.backward()
             self.optimizer.step()
 
-            cls_loss_.update(cls_loss, data.size(0))
+            cls_loss_.update(cls_loss.item(), data.size(0))
             accuracy_.update(accuracy, data.size(0))
 
         # 验证集作为模型输入
