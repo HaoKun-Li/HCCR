@@ -117,9 +117,57 @@ class HCDataset(data.Dataset):
 
         if self.transform:
             image = self.transform(image)
-            image = image.type(torch.float32)
+            image = self.gradient_feature_maps(image.numpy())
+            image = torch.from_numpy(image)
 
         return image, label
+
+    def filter_x(self, image):
+        fil = np.array(
+            [[-1, 0, 1],
+             [-2, 0, 2],
+             [-1, 0, 1]]
+        )
+        res = cv2.filter2D(image, -1, fil)/8
+        print(res[0][30][40:50])
+        res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+        print(res[0][30][40:50])
+        return res
+
+    def filter_y(self, image):
+        fil = np.array(
+            [[-1, -2, -1],
+             [0, 0, 0],
+             [1, 2, 1]]
+        )
+        res = cv2.filter2D(image, -1, fil)/8
+        res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
+        return res
+
+    def gradient_feature_maps(self, image):
+        fil_x = np.array(
+            [[-1, 0, 1],
+             [-2, 0, 2],
+             [-1, 0, 1]]
+        )
+        fil_y = np.array(
+            [[-1, -2, -1],
+             [0, 0, 0],
+             [1, 2, 1]]
+        )
+        res_x = cv2.filter2D(image, -1, fil_x) / 8
+        res_y = cv2.filter2D(image, -1, fil_y) / 8
+        res_3 = -1 * res_x
+        res_4 = -1 * res_y
+        res_5 = 0.707 * res_x + 0.707 * res_y
+        res_6 = 0.707 * res_x - 0.707 * res_y
+        res_7 = -0.707 * res_x + 0.707 * res_y
+        res_8 = -0.707 * res_x - 0.707 * res_y
+
+        # res_x = (res_x - np.min(res_x)) / (np.max(res_x) - np.min(res_x)) * 255
+
+        images = np.array([image, res_x, res_y, res_3, res_4, res_5, res_6, res_7, res_8]).reshape(-1, config.resize_size, config.resize_size)
+        return images
 
 
 
@@ -217,93 +265,6 @@ def sobel_1(image):
     return gradient
 
 
-def filter_1(image):
-    fil = np.array(
-        [[-1, 0, 1],
-         [-2, 0, 2],
-         [-1, 0, 1]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
-
-def filter_2(image):
-    fil = np.array(
-        [[-2, -1, 0],
-         [-1, 0, 1],
-         [0, 1, 2]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
-
-def filter_3(image):
-    fil = np.array(
-        [[-1, -2, -1],
-         [0, 0, 0],
-         [1, 2, 1]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
-
-def filter_4(image):
-    fil = np.array(
-        [[0, -1, -2],
-         [1, 0, -1],
-         [2, 1, 0]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
-
-def filter_5(image):
-    fil = np.array(
-        [[1, 0, -1],
-         [2, 0, -2],
-         [1, 0, -1]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
-
-def filter_6(image):
-    fil = np.array(
-        [[2, 1, 0],
-         [1, 0, -1],
-         [0, -1, -2]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
-
-def filter_7(image):
-    fil = np.array(
-        [[1, 2, 1],
-         [0, 0, 0],
-         [-1, -2, -1]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
-
-def filter_8(image):
-    fil = np.array(
-        [[0, 1, 2],
-         [-1, 0, 1],
-         [-2, -1, 0]]
-    )
-    res = cv2.filter2D(image, -1, fil)
-
-    res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
-    return res
 
 
 
@@ -364,18 +325,7 @@ def resize_and_normalize_image(img):
     return img
 
 
-def gradient_feature_maps(image):
 
-    image_1 = filter_1(image)
-    image_2 = filter_2(image)
-    image_3 = filter_3(image)
-    image_4 = filter_4(image)
-    image_5 = filter_5(image)
-    image_6 = filter_6(image)
-    image_7 = filter_7(image)
-    image_8 = filter_8(image)
-    images = np.array([image, image_1, image_2, image_3, image_4, image_5, image_6, image_7, image_8])
-    return images
 
 
 def write_char_set():
