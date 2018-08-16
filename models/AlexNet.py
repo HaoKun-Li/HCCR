@@ -57,10 +57,10 @@ class AlexNet(nn.Module):
             nn.BatchNorm1d(4096),
             nn.ReLU(inplace=True),
             nn.Dropout(p=0.5),
-            # nn.Linear(4096, 4096, bias=True),
-            # nn.BatchNorm1d(4096),
-            # nn.ReLU(inplace=True),
-            # nn.Dropout(p=0.5),
+            nn.Linear(4096, 4096, bias=True),
+            nn.BatchNorm1d(4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.5),
             nn.Linear(4096, self.config.random_size, bias=True),
         )
 

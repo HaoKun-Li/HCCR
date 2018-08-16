@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 import torch
+import sys
+import os
+sys.path.append('../../')
 import torchvision
 from models.LeNet_5 import LeNet_5
 from training.LeNet_5.trainer import LeNet_5Trainer
 from training.LeNet_5.config import Config
 from tools.logger import Logger
 from checkpoint import CheckPoint
-import os
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import multiprocessing
 
 if __name__ == '__main__':
@@ -40,8 +42,8 @@ if __name__ == '__main__':
 
     print(train_data.train_data.size())
     print(train_data.train_labels.size())
-    plt.imshow(train_data.train_data[0].numpy(), cmap='gray')
-    plt.title('%i' % train_data.train_labels[0])
+    # plt.imshow(train_data.train_data[0].numpy(), cmap='gray')
+    # plt.title('%i' % train_data.train_labels[0])
     # plt.show()
 
 

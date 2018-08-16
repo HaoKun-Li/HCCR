@@ -24,9 +24,9 @@ class Config(object):
         self.batchSize = 32  # mini-batch size 128
 
         # lr master for optimizer 1 (mask vector d)
-        self.lr = 0.01  # initial learning rate
+        self.lr = 0.001  # initial learning rate
         self.step = [10, 25, 40]  # step for linear or exp learning rate policy
-        self.decayRate = 0.5  # lr decay rate
+        self.decayRate = 0.1  # lr decay rate
         self.endlr = -1
 
         # ---------- Model options ---------------------------------------------
