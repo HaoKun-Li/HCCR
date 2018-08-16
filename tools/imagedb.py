@@ -117,7 +117,7 @@ class HCDataset(data.Dataset):
 
         if self.transform:
             image = self.transform(image)
-            image = self.gradient_feature_maps(image.numpy())
+            image = self.gradient_feature_maps(image.numpy(), label)
             image = torch.from_numpy(image)
 
         return image, label
@@ -144,19 +144,30 @@ class HCDataset(data.Dataset):
         res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
         return res
 
-    def gradient_feature_maps(self, image):
+
+    def save_as_png(self, image, label, st):
+        image = (image - np.min(image)) / (np.max(image) - np.min(image)) * 255
+
+        im = PIL.Image.fromarray(image)
+        im.convert('RGB').save(config.save_path + '/gradient_png/' + str(label) + '_' + str(st) + '.png')
+
+
+
+    def gradient_feature_maps(self, image, label):
         fil_x = np.array(
             [[-1, 0, 1],
              [-2, 0, 2],
-             [-1, 0, 1]]
+             [-1, 0, 1]], dtype='float32'
         )
         fil_y = np.array(
             [[-1, -2, -1],
              [0, 0, 0],
-             [1, 2, 1]]
+             [1, 2, 1]], dtype='float32'
         )
-        res_x = cv2.filter2D(image, -1, fil_x) / 8
-        res_y = cv2.filter2D(image, -1, fil_y) / 8
+
+        image = image[0]
+        res_x = cv2.filter2D(image, -1, fil_x)/4
+        res_y = cv2.filter2D(image, -1, fil_y)/4
         res_3 = -1 * res_x
         res_4 = -1 * res_y
         res_5 = 0.707 * res_x + 0.707 * res_y
@@ -164,7 +175,17 @@ class HCDataset(data.Dataset):
         res_7 = -0.707 * res_x + 0.707 * res_y
         res_8 = -0.707 * res_x - 0.707 * res_y
 
-        # res_x = (res_x - np.min(res_x)) / (np.max(res_x) - np.min(res_x)) * 255
+        # if not os.path.isdir(config.save_path + '/gradient_png/'):
+        #     os.makedirs(config.save_path + '/gradient_png/')
+        # self.save_as_png(image.reshape(config.resize_size, config.resize_size), label, 'origin')
+        # self.save_as_png(res_x.reshape(config.resize_size, config.resize_size), label, 'x')
+        # self.save_as_png(res_y.reshape(config.resize_size, config.resize_size), label, 'y')
+        # self.save_as_png(res_3.reshape(config.resize_size, config.resize_size), label, 3)
+        # self.save_as_png(res_4.reshape(config.resize_size, config.resize_size), label, 4)
+        # self.save_as_png(res_5.reshape(config.resize_size, config.resize_size), label, 5)
+        # self.save_as_png(res_6.reshape(config.resize_size, config.resize_size), label, 6)
+        # self.save_as_png(res_7.reshape(config.resize_size, config.resize_size), label, 7)
+        # self.save_as_png(res_8.reshape(config.resize_size, config.resize_size), label, 8)
 
         images = np.array([image, res_x, res_y, res_3, res_4, res_5, res_6, res_7, res_8]).reshape(-1, config.resize_size, config.resize_size)
         return images
@@ -252,20 +273,6 @@ def read_from_gnt_dir(gnt_dir):
             with open(file_path, 'rb') as f:
                 for image, tagcode in one_file(f):
                     yield image, tagcode, file_name
-
-
-#梯度特征提取
-def sobel_1(image):
-    gradient = np.zeros(image.shape, dtype='float32')
-    for i in range(1, image.shape[0]-1):
-        for j in range(1, image.shape[1]-1):
-            gradient[i][j] = image[i-1][j-1]*(-1) + image[i-1][j+1]*1 + image[i][j-1]*(-2) + image[i][j+1] * 2 +\
-                             image[i+1][j-1]*(-1) + image[i+1][j+1]*1
-
-    return gradient
-
-
-
 
 
  # 统计样本数
