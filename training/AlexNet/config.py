@@ -6,7 +6,7 @@ class Config(object):
         super(Config, self).__init__()
         #  ------------ General options ----------------------------------------
         self.save_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))+"/results/AlexNet"
-        self.dataPath = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))+"/small_data/"
+        self.dataPath = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))+"/data/"
         self.trainDataPath = self.dataPath+"/HWDB1.1trn_gnt"
         self.validDataPath = self.dataPath + "/HWDB1.1tst_gnt"
         # self.annoPath = "./annotations/imglist_anno_12.txt"
@@ -25,7 +25,7 @@ class Config(object):
 
         # lr master for optimizer 1 (mask vector d)
         self.lr = 0.001  # initial learning rate
-        self.step = [10, 25, 40]  # step for linear or exp learning rate policy
+        self.step = [10, 20, 30]  # step for linear or exp learning rate policy
         self.decayRate = 0.1  # lr decay rate
         self.endlr = -1
 
