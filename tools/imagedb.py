@@ -217,7 +217,18 @@ def preprocess_gnt():
     if not os.path.exists(train_annotation_path):
         for image, tagcode, file_name in read_from_gnt_dir(config.trainDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
-            image = resize_and_normalize_image(image)
+
+            #test
+            # im = Image.fromarray(image)
+            # im_path = os.path.join(train_png_path, file_name + '_orgin' + str(tagcode) + '.png')
+            # im.convert('L').save(im_path)
+            #test
+
+            image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
+            image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
+            assert image.shape == (config.resize_size, config.resize_size)
+            image = image.astype(np.float32)
+
             im = Image.fromarray(image)
             im_path = os.path.join(train_png_path, file_name + '_' + str(tagcode) + '.png')
             im.convert('L').save(im_path)
@@ -440,3 +451,231 @@ def load_data():
     train_dataset = torch.utils.data.TensorDataset(train_data_x, train_data_y)
     valid_dataset = torch.utils.data.TensorDataset(valid_data_x, valid_data_y)
     return train_dataset, valid_dataset
+
+
+def aspect_radio_mapping(r1, dst_wid, dst_hei, ratio_preserve_func):
+    if ratio_preserve_func == 'ASPECT':
+        return r1
+
+    elif ratio_preserve_func == 'SQUART':
+        return np.sqrt(r1)
+
+    elif ratio_preserve_func == 'CUBIC':
+        return np.power(r1, 0.333)
+
+    elif ratio_preserve_func == 'SINE':
+        return np.sqrt(np.sin(3.1415926*r1/2))
+
+    else:
+        return min(dst_wid, dst_hei) / max(dst_wid, dst_hei)
+
+
+def forward_push_val(dst, dst_wid, dst_hei, val, x, y, xscale, yscale):
+    fl = x - xscale / 2
+    fr = x + xscale / 2
+    ft = y - yscale / 2
+    fb = y + yscale / 2
+
+    l = int(fl)
+    r = int(fr) + 1
+    t = int(ft)
+    b = int(fb) + 1
+
+    l = min(max(l, 0), dst_wid - 1)
+    r = min(max(r, 0), dst_wid - 1)
+    t = min(max(t, 0), dst_hei - 1)
+    b = min(max(b, 0), dst_hei - 1)
+
+    for j in range(t, b+1):
+        for i in range(l, r+1):
+            # float intersect_area;
+            xg = min(i+1, fr) - max(i, fl)
+            yg = min(j+1, fb) - max(j, ft)
+
+            if xg > 0 and yg > 0:
+                dst[j, i] += xg * yg * val
+
+    return dst
+
+
+def forward_push_val2(dst, dst_wid, dst_hei, val, fl, ft, fr, fb, xscale, yscale):
+    l = int(fl)
+    r = int(fr) + 1
+    t = int(ft)
+    b = int(fb) + 1
+
+    l = min(max(l, 0), dst_wid - 1)
+    r = min(max(r, 0), dst_wid - 1)
+    t = min(max(t, 0), dst_hei - 1)
+    b = min(max(b, 0), dst_hei - 1)
+
+    for j in range(t, b):
+        for i in range(l, r):
+            xg = min(i + 1, fr) - max(i, fl)
+            yg = min(j + 1, fb) - max(j, ft)
+
+            if xg > 0 and yg > 0:
+                dst[j, i] += xg * yg * val
+
+    return dst
+
+
+def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
+
+    src_wid = src.shape[1]
+    src_hei = src.shape[0]
+    region = [0, 0, src_wid-1, src_hei-1]
+    m10 = 0
+    m01 = 0
+    u20 = 0
+    u02 = 0
+    constval = 0.001
+    threshold = 64 # smaller than 128 are considered as background pixel while others are foreground pixels.
+    src = (1 - (src - np.min(src)) / (np.max(src) - np.min(src))) * 255
+    dst = np.zeros([dst_hei, dst_wid])
+
+    for y in range(region[1], region[3]+1):
+        for x in range(region[0], region[2]+1):
+            m10 += x * src[y][x]
+            m01 += y * src[y][x]
+
+    m00 = np.sum(src)
+    if m00 == 0:
+        return;
+
+    #xc, yc
+    xc = m10 / m00
+    yc = m01 / m00
+
+    # general u20, u02
+    for y in range(region[1], region[3]+1):
+        for x in range(region[0], region[2]+1):
+            u20 += (x - xc) * (x - xc) * src[y][x]
+            u02 += (y - yc) * (y - yc) * src[y][x]
+
+    #general w1, h1
+    w1 = int(np.round(4.5 * np.sqrt(u20 / m00)))
+    h1 = int(np.round(4.5 * np.sqrt(u02 / m00)))
+
+    l = np.round(xc - w1 / 2)
+    r = np.round(xc + w1 / 2 + 1)
+    t = np.round(yc - h1 / 2)
+    b = np.round(yc + h1 / 2 + 1)
+    l = int(min(max(l, 0), src_wid))
+    r = int(min(max(r, 0), src_wid))
+    t = int(min(max(t, 0), src_hei))
+    b = int(min(max(b, 0), src_hei))
+
+    dx = np.zeros([(b - t), (r - l)])
+    dy = np.zeros([(b - t), (r - l)])
+    px = np.zeros([(r - l), 1])
+    py = np.zeros([(b - t), 1])
+    hx = np.zeros([(r - l), 1])
+    hy = np.zeros([(b - t), 1])
+
+    #general dx
+    for y in range(t, b):
+        run_start = -1
+        run_end = -1
+        for x in range(l, r):
+            if src[y][x] < threshold:
+                if run_start < 0:
+                    run_start = x
+                    run_end = x
+                else:
+                    run_end = x
+            else:
+                if run_start < 0:
+                    dx[y-t][x-l] = constval
+                else:
+                    d = 1. / (w1/4 + run_end - run_start +1)
+                    dx[y - t][x - l] = constval
+                    for i in range(run_start, run_end+1):
+                        dx[y - t][i - l] = d
+                    run_end = -1
+                    run_start = -1
+
+        if run_start > 0:
+            d = 1. / (w1/4 + run_end - run_start + 1)
+            for i in range(run_start, run_end + 1):
+                dx[y - t][i - l] = d
+
+    # general dy
+    for x in range(l, r):
+        run_start = -1
+        run_end = -1
+        for y in range(t, b):
+            if src[y][x] < threshold:
+                if run_start < 0:
+                    run_start = y
+                    run_end = y
+                else:
+                    run_end = y
+            else:
+                if run_start < 0:
+                    dy[y-t][x-l] = constval
+                else:
+                    d = 1. / (h1/4 + run_end - run_start +1)
+                    dy[y - t][x - l] = constval
+                    for i in range(run_start, run_end+1):
+                        dy[i - t][x - l] = d
+                    run_end = -1
+                    run_start = -1
+
+        if run_start > 0:
+            d = 1. / (h1/4 + run_end - run_start + 1)
+            for i in range(run_start, run_end + 1):
+                dy[i - t][x - l] = d
+
+    #general dx_sum, dy_sum
+    dx_sum = np.sum(dx)
+    dy_sum = np.sum(dy)
+
+    # general px, py
+    py = (np.sum(dy, 1) / dy_sum)
+    px = (np.sum(dx, 0) / dx_sum)
+
+    #hx, hy
+    for x in range(l, r):
+        for i in range(l, x):
+            hx[x-l] += px[i-l]
+
+    for y in range(t, b):
+        for j in range(t, y):
+            hy[y-t] +=py[j-t]
+
+    r1 = min((r-l), (b-t)) / max((r-l), (b-t))
+    r2 = aspect_radio_mapping(r1, dst_wid, dst_hei, ratio_preserve_func)
+
+    if w1 > h1:
+        w2 = dst_wid
+        h2 = int(w2 * r2)
+        xoffset = 0
+        yoffset = (dst_hei - h2) / 2
+
+    else:
+        h2 = dst_hei
+        w2 = int(h2*r2)
+        xoffset = (dst_wid - w2) / 2
+        yoffset = 0
+
+    xscale = w2 / w1
+    yscale = h2 / h1
+
+    # forward mapping
+    for y in range(t, b):
+        for x in range(l, r):
+            x1 = w2 * hx[x-l]
+            y1 = h2 * hy[y-t]
+            # if src[y][x] > threshold:
+            #     src[y][x] = src[y][x] # todo
+
+            if y == b-1 or x == r-1:
+                dst = forward_push_val(dst, dst_wid, dst_hei, src[y][x], x1 + xoffset, y1 + yoffset, xscale, yscale)
+
+            else:
+                x2 = w2 * hx[x - l + 1]
+                y2 = h2 * hy[y - t + 1]
+                dst = forward_push_val2(dst, dst_wid, dst_hei, src[y][x], x1 + xoffset, y1 + yoffset, x2 + xoffset, y2 + yoffset, xscale, yscale)
+
+    return dst
