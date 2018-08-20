@@ -12,7 +12,7 @@ class AlexNet(nn.Module):
 
         self.config = Config()
         self.conv1 = nn.Sequential(                     # input shape(1, 114, 114)
-            nn.Conv2d(9, 96, kernel_size=11, stride=4, bias=True),
+            nn.Conv2d(1, 96, kernel_size=11, stride=4, bias=True),
             nn.BatchNorm2d(96),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),

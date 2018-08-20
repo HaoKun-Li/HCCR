@@ -175,19 +175,20 @@ class HCDataset(data.Dataset):
         res_7 = -0.707 * res_x + 0.707 * res_y
         res_8 = -0.707 * res_x - 0.707 * res_y
 
-        if not os.path.isdir(config.save_path + '/gradient_png/'):
-            os.makedirs(config.save_path + '/gradient_png/')
-        self.save_as_png(image.reshape(config.resize_size, config.resize_size), label, 'origin')
-        self.save_as_png(res_x.reshape(config.resize_size, config.resize_size), label, 'x')
-        self.save_as_png(res_y.reshape(config.resize_size, config.resize_size), label, 'y')
-        self.save_as_png(res_3.reshape(config.resize_size, config.resize_size), label, 3)
-        self.save_as_png(res_4.reshape(config.resize_size, config.resize_size), label, 4)
-        self.save_as_png(res_5.reshape(config.resize_size, config.resize_size), label, 5)
-        self.save_as_png(res_6.reshape(config.resize_size, config.resize_size), label, 6)
-        self.save_as_png(res_7.reshape(config.resize_size, config.resize_size), label, 7)
-        self.save_as_png(res_8.reshape(config.resize_size, config.resize_size), label, 8)
+        # if not os.path.isdir(config.save_path + '/gradient_png/'):
+        #     os.makedirs(config.save_path + '/gradient_png/')
+        # self.save_as_png(image.reshape(config.resize_size, config.resize_size), label, 'origin')
+        # self.save_as_png(res_x.reshape(config.resize_size, config.resize_size), label, 'x')
+        # self.save_as_png(res_y.reshape(config.resize_size, config.resize_size), label, 'y')
+        # self.save_as_png(res_3.reshape(config.resize_size, config.resize_size), label, 3)
+        # self.save_as_png(res_4.reshape(config.resize_size, config.resize_size), label, 4)
+        # self.save_as_png(res_5.reshape(config.resize_size, config.resize_size), label, 5)
+        # self.save_as_png(res_6.reshape(config.resize_size, config.resize_size), label, 6)
+        # self.save_as_png(res_7.reshape(config.resize_size, config.resize_size), label, 7)
+        # self.save_as_png(res_8.reshape(config.resize_size, config.resize_size), label, 8)
 
-        images = np.array([image, res_x, res_y, res_3, res_4, res_5, res_6, res_7, res_8]).reshape(-1, config.resize_size, config.resize_size)
+        # images = np.array([image, res_x, res_y, res_3, res_4, res_5, res_6, res_7, res_8]).reshape(-1, config.resize_size, config.resize_size)
+        images = np.array([image]).reshape(-1, config.resize_size, config.resize_size)
         return images
 
 
