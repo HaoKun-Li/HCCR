@@ -4,7 +4,7 @@ import os
 import numpy as np
 import scipy.misc
 import struct
-import PIL.Image
+from PIL import Image
 import random
 from training.AlexNet.config import Config
 import torch
@@ -16,7 +16,7 @@ import torch.utils.data as data
 
 def png_loader(path):
     with open(path, 'rb') as f:
-        img = PIL.Image.open(f)
+        img = Image.open(f)
         return img.convert('L')
 
 class HCDataset(data.Dataset):
@@ -148,7 +148,7 @@ class HCDataset(data.Dataset):
     def save_as_png(self, image, label, st):
         image = (image - np.min(image)) / (np.max(image) - np.min(image)) * 255
 
-        im = PIL.Image.fromarray(image)
+        im = Image.fromarray(image)
         im.convert('RGB').save(config.save_path + '/gradient_png/' + str(label) + '_' + str(st) + '.png')
 
 
@@ -175,17 +175,17 @@ class HCDataset(data.Dataset):
         res_7 = -0.707 * res_x + 0.707 * res_y
         res_8 = -0.707 * res_x - 0.707 * res_y
 
-        # if not os.path.isdir(config.save_path + '/gradient_png/'):
-        #     os.makedirs(config.save_path + '/gradient_png/')
-        # self.save_as_png(image.reshape(config.resize_size, config.resize_size), label, 'origin')
-        # self.save_as_png(res_x.reshape(config.resize_size, config.resize_size), label, 'x')
-        # self.save_as_png(res_y.reshape(config.resize_size, config.resize_size), label, 'y')
-        # self.save_as_png(res_3.reshape(config.resize_size, config.resize_size), label, 3)
-        # self.save_as_png(res_4.reshape(config.resize_size, config.resize_size), label, 4)
-        # self.save_as_png(res_5.reshape(config.resize_size, config.resize_size), label, 5)
-        # self.save_as_png(res_6.reshape(config.resize_size, config.resize_size), label, 6)
-        # self.save_as_png(res_7.reshape(config.resize_size, config.resize_size), label, 7)
-        # self.save_as_png(res_8.reshape(config.resize_size, config.resize_size), label, 8)
+        if not os.path.isdir(config.save_path + '/gradient_png/'):
+            os.makedirs(config.save_path + '/gradient_png/')
+        self.save_as_png(image.reshape(config.resize_size, config.resize_size), label, 'origin')
+        self.save_as_png(res_x.reshape(config.resize_size, config.resize_size), label, 'x')
+        self.save_as_png(res_y.reshape(config.resize_size, config.resize_size), label, 'y')
+        self.save_as_png(res_3.reshape(config.resize_size, config.resize_size), label, 3)
+        self.save_as_png(res_4.reshape(config.resize_size, config.resize_size), label, 4)
+        self.save_as_png(res_5.reshape(config.resize_size, config.resize_size), label, 5)
+        self.save_as_png(res_6.reshape(config.resize_size, config.resize_size), label, 6)
+        self.save_as_png(res_7.reshape(config.resize_size, config.resize_size), label, 7)
+        self.save_as_png(res_8.reshape(config.resize_size, config.resize_size), label, 8)
 
         images = np.array([image, res_x, res_y, res_3, res_4, res_5, res_6, res_7, res_8]).reshape(-1, config.resize_size, config.resize_size)
         return images
@@ -218,7 +218,7 @@ def preprocess_gnt():
         for image, tagcode, file_name in read_from_gnt_dir(config.trainDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
             image = resize_and_normalize_image(image)
-            im = PIL.Image.fromarray(image)
+            im = Image.fromarray(image)
             im_path = os.path.join(train_png_path, file_name + '_' + str(tagcode) + '.png')
             im.convert('L').save(im_path)
             train_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode))
@@ -236,7 +236,7 @@ def preprocess_gnt():
         for image, tagcode, file_name in read_from_gnt_dir(config.validDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
             image = resize_and_normalize_image(image)
-            im = PIL.Image.fromarray(image)
+            im = Image.fromarray(image)
             im_path = os.path.join(valid_png_path, file_name + '_' + str(tagcode) + '.png')
             im.convert('RGB').save(im_path)
             valid_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode))
@@ -290,11 +290,11 @@ def count_num_sample():
         # 提取部分图像，转为png
         st = time.time()
         if train_counter < 10:
-            im = PIL.Image.fromarray(image)
+            im = Image.fromarray(image)
             im.convert('RGB').save(config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '.png')
 
             image = resize_and_normalize_image(image)
-            im = PIL.Image.fromarray(image)
+            im = Image.fromarray(image)
             im.convert('RGB').save(config.save_path + '/png/' + tagcode_unicode + str(train_counter) + '_resize.png')
 
     for image, tagcode in read_from_gnt_dir(config.validDataPath):
@@ -321,6 +321,11 @@ def resize_and_normalize_image(img):
 
     # 缩放
     img = scipy.misc.imresize(img, (config.resize_size-6, config.resize_size-6))
+
+    # img = Image.fromarray(img)
+    # img = img.resize((config.resize_size - 6, config.resize_size - 6))
+    # img = np.asarray(img)
+
     img = np.lib.pad(img, ((3, 3), (3, 3)), mode='constant', constant_values=255)
     assert img.shape == (config.resize_size, config.resize_size)
 
