@@ -60,7 +60,7 @@ class AlexNetTrainer(object):
             cls_loss_.update(cls_loss.item(), data.size(0))
             accuracy_.update(accuracy, data.size(0))
 
-            if batch_idx%1000 == 10:
+            if batch_idx%2000 == 10:
                 print(batch_idx)
                 print(cls_loss.item())
 
