@@ -117,6 +117,8 @@ class HCDataset(data.Dataset):
 
         if self.transform:
             image = self.transform(image)
+
+            # print(torch.max(image), torch.min(image))
             image = self.gradient_feature_maps(image.numpy(), label)
             image = torch.from_numpy(image)
 
@@ -225,10 +227,12 @@ def preprocess_gnt():
             # im.convert('L').save(im_path)
             #test
 
-            image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
-            image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
-            assert image.shape == (config.resize_size, config.resize_size)
-            image = image.astype(np.float32)
+            # image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
+            # image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
+            # assert image.shape == (config.resize_size, config.resize_size)
+            # image = image.astype(np.float32)
+
+            image = resize_and_normalize_image(image)
 
             im = Image.fromarray(image)
             im_path = os.path.join(train_png_path, file_name + '_' + str(tagcode) + '.png')
@@ -248,12 +252,12 @@ def preprocess_gnt():
         for image, tagcode, file_name in read_from_gnt_dir(config.validDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
 
-            image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
-            image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
-            assert image.shape == (config.resize_size, config.resize_size)
-            image = image.astype(np.float32)
+            # image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
+            # image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
+            # assert image.shape == (config.resize_size, config.resize_size)
+            # image = image.astype(np.float32)
 
-            # image = resize_and_normalize_image(image)
+            image = resize_and_normalize_image(image)
 
             im = Image.fromarray(image)
             im_path = os.path.join(valid_png_path, file_name + '_' + str(tagcode) + '.png')
