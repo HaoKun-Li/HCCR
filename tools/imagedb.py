@@ -247,16 +247,17 @@ def preprocess_gnt():
     if not os.path.exists(valid_annotation_path):
         for image, tagcode, file_name in read_from_gnt_dir(config.validDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
+
             image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
             image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
             assert image.shape == (config.resize_size, config.resize_size)
             image = image.astype(np.float32)
-            
-	    # image = resize_and_normalize_image(image)
-            
-	    im = Image.fromarray(image)
+
+            # image = resize_and_normalize_image(image)
+
+            im = Image.fromarray(image)
             im_path = os.path.join(valid_png_path, file_name + '_' + str(tagcode) + '.png')
-            im.convert('RGB').save(im_path)
+            im.convert('L').save(im_path)
             valid_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode))
             print(im_path)
 
