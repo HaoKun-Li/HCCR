@@ -6,7 +6,7 @@ class Config(object):
         super(Config, self).__init__()
         #  ------------ General options ----------------------------------------
         self.save_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))+"/results/AlexNet"
-        self.dataPath = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))+"/small_data/"
+        self.dataPath = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))+"/data/"
         self.trainDataPath = self.dataPath+"/HWDB1.1trn_gnt"
         self.validDataPath = self.dataPath + "/HWDB1.1tst_gnt"
         # self.annoPath = "./annotations/imglist_anno_12.txt"
@@ -15,13 +15,13 @@ class Config(object):
         self.GPU = "0"  # default gpu to use
 
         # ------------- Data options -------------------------------------------
-        self.nThreads = 2  # number of data loader threads
+        self.nThreads = 4  # number of data loader threads
         self.random_size = 3755 #number of random select Chinese
         self.resize_size = 114
 
         # ---------- Optimization options --------------------------------------
         self.nEpochs = 1000  # number of total epochs to train 400
-        self.batchSize = 32  # mini-batch size 128
+        self.batchSize = 128  # mini-batch size 128
 
         # lr master for optimizer 1 (mask vector d)
         self.lr = 0.001  # initial learning rate

@@ -60,6 +60,9 @@ if __name__ == '__main__':
         shuffle=True,
         **kwargs)
 
+    print(len(train_loader.dataset))
+    print(len(valid_loader.dataset))
+
     #Set model
     model =AlexNet()
     para = sum([np.prod(list(p.size())) for p in model.parameters()])
