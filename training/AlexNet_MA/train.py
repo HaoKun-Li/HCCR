@@ -8,7 +8,7 @@ sys.path.append('../../')
 
 from models.AlexNet import AlexNet
 from models.AlexNet_ST import AlexNet_ST
-from models.AlexNet_CWA import AlexNet_CWA
+from models.AlexNet_SE import AlexNet_SE
 import models.MA_CNN as model
 from models.AlexNet_gap import AlexNet_gap
 from models.AlexNet_gap_SE import AlexNet_gap_SE

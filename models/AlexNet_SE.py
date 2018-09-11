@@ -21,11 +21,11 @@ class SELayer(nn.Module):
         y = self.fc(y).view(b, c, 1, 1)
         return x * y
 
-class AlexNet_CWA(nn.Module):
+class AlexNet_SE(nn.Module):
     '''AlexNet with Squeeze-and-Excitation Networks '''
 
     def __init__(self):
-        super(AlexNet_CWA, self).__init__()
+        super(AlexNet_SE, self).__init__()
 
         self.config = Config()
         self.conv1 = nn.Sequential(                     # input shape(1, 114, 114)

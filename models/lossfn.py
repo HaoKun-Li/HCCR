@@ -21,7 +21,7 @@ class LossFn:
 
     def box_loss(self,gt_label,gt_offset,pred_offset):
         #get the mask element which != 0
-        mask = torch.ne(gt_label,0)
+        mask = torch.ne(gt_label, 0)
         #convert mask to dim index
         chose_index = torch.nonzero(mask)
         chose_index = torch.squeeze(chose_index)
