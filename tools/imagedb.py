@@ -234,6 +234,8 @@ def preprocess_gnt():
 
             image = resize_and_normalize_image(image)
 
+            # image = padding_and_normalize_image(image)
+
             im = Image.fromarray(image)
             im_path = os.path.join(train_png_path, file_name + '_' + str(tagcode) + '.png')
             im.convert('L').save(im_path)
@@ -258,6 +260,8 @@ def preprocess_gnt():
             # image = image.astype(np.float32)
 
             image = resize_and_normalize_image(image)
+
+            # image = padding_and_normalize_image(image)
 
             im = Image.fromarray(image)
             im_path = os.path.join(valid_png_path, file_name + '_' + str(tagcode) + '.png')
@@ -359,6 +363,56 @@ def resize_and_normalize_image(img):
     img = img.astype(np.float32)
     return img
 
+
+def padding_and_normalize_image(img):
+    if max(img.shape[0], img.shape[1]) > config.resize_size:
+        # 补方
+        pad_size = abs(img.shape[0] - img.shape[1]) // 2
+        if img.shape[0] < img.shape[1]:
+            pad_dims = ((pad_size, pad_size), (0, 0))
+        else:
+            pad_dims = ((0, 0), (pad_size, pad_size))
+
+        img = np.lib.pad(img, pad_dims, mode='constant', constant_values=255)
+
+        # im = PIL.Image.fromarray(img)
+        # im.convert('RGB').save('png/' + str(train_counter) + tagcode_unicode + '补方+pad_size_' + str(pad_size) + '.png')
+
+        # 缩放
+        img = scipy.misc.imresize(img, (config.resize_size - 6, config.resize_size - 6))
+
+        # img = Image.fromarray(img)
+        # img = img.resize((config.resize_size - 6, config.resize_size - 6))
+        # img = np.asarray(img)
+
+        img = np.lib.pad(img, ((3, 3), (3, 3)), mode='constant', constant_values=255)
+        assert img.shape == (config.resize_size, config.resize_size)
+
+        # img = img.flatten()
+
+        # 像素值范围0到1(Min-max normalization),最亮的设为0， 最暗设为255
+        img = (1 - (img - np.min(img)) / (np.max(img) - np.min(img))) * 255
+        img = img.astype(np.float32)
+        return img
+
+    else:
+        # 补方
+        x_pad = (config.resize_size - img.shape[1]) // 2
+        y_pad = (config.resize_size - img.shape[0]) // 2
+
+        pad_dims = ((y_pad, y_pad), (x_pad, x_pad))
+
+        img = np.lib.pad(img, pad_dims, mode='constant', constant_values=255)
+
+        # 缩放
+        img = scipy.misc.imresize(img, (config.resize_size, config.resize_size))
+
+        assert img.shape == (config.resize_size, config.resize_size)
+
+        # 像素值范围0到1(Min-max normalization),最亮的设为0， 最暗设为255
+        img = (1 - (img - np.min(img)) / (np.max(img) - np.min(img))) * 255
+        img = img.astype(np.float32)
+        return img
 
 
 

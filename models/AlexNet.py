@@ -43,13 +43,6 @@ class AlexNet(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2),
         )  # output shape(256, 3, 3)
 
-        self.conv_small = nn.Sequential(
-            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1, bias=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.BatchNorm2d(256),
-            nn.ReLU(),
-        )  # output shape(256, 3, 3)
-
 
 
         self.fc = nn.Sequential(

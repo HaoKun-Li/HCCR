@@ -37,8 +37,8 @@ class CheckPoint(object):
                 # print key, value.size()
                 model_dict[key] = value
             else:
-                pass
-                # print "key error:", key, value.size()
+                # pass
+                print("key error:", key, value.size())
         model.load_state_dict(model_dict)
         # model.load_state_dict(state_dict)
         # set the model in evaluation mode, otherwise the accuracy will change
@@ -77,7 +77,7 @@ class CheckPoint(object):
         else:
             assert False, "file not exits" + checkpoint_path
 
-    def save_checkpoint(self, model, optimizer, epoch, index=0):
+    def save_checkpoint(self, model, optimizer, epoch, index=0, tag=""):
         """
         :params model: model
         :params optimizer: optimizer
@@ -105,7 +105,7 @@ class CheckPoint(object):
 
         # save to file
         torch.save(self.check_point_params, os.path.join(
-            self.save_path, "checkpoint_%03d.pth" % index))
+            self.save_path, "checkpoint_%03d_%s.pth" % (index, tag)))
 
     def list2sequential(self, model):
         if isinstance(model, list):

@@ -60,34 +60,35 @@ class AlexNetTrainer(object):
             cls_loss_.update(cls_loss.item(), data.size(0))
             accuracy_.update(accuracy, data.size(0))
 
-            if batch_idx%2000 == 10:
+            if batch_idx%20 == 10:
                 print(batch_idx)
                 print(cls_loss.item())
 
         # 验证集作为模型输入
-        self.model.eval()
+        with torch.no_grad():
+            self.model.eval()
 
-        for batch_idx, (data, gt_label) in enumerate(self.valid_loader):
-            data, gt_label = data.to(self.device), gt_label.to(
-                self.device)
+            for batch_idx, (data, gt_label) in enumerate(self.valid_loader):
+                data, gt_label = data.to(self.device), gt_label.to(
+                    self.device)
 
-            cls_pred = self.model(data)
-            accuracy_valid = self.compute_accuracy(cls_pred, gt_label)
-            accuracy_valid_.update(accuracy_valid, data.size(0))
+                cls_pred = self.model(data)
+                accuracy_valid = self.compute_accuracy(cls_pred, gt_label)
+                accuracy_valid_.update(accuracy_valid, data.size(0))
 
 
-        #记录数据
-        self.scalar_info['cls_loss'] = cls_loss_.avg
-        self.scalar_info['accuracy'] = accuracy_.avg
-        self.scalar_info['lr'] = self.scheduler.get_lr()[0]
+            #记录数据
+            self.scalar_info['cls_loss'] = cls_loss_.avg
+            self.scalar_info['accuracy'] = accuracy_.avg
+            self.scalar_info['lr'] = self.scheduler.get_lr()[0]
 
-        # if self.logger is not None:
-        #     for tag, value in list(self.scalar_info.items()):
-        #         self.logger.scalar_summary(tag, value, self.run_count)
-        #     self.scalar_info = {}
-        # self.run_count += 1
+            # if self.logger is not None:
+            #     for tag, value in list(self.scalar_info.items()):
+            #         self.logger.scalar_summary(tag, value, self.run_count)
+            #     self.scalar_info = {}
+            # self.run_count += 1
 
-        print("Epoch: {}|===>Train Loss: {:.8f}   Train Accuracy: {:.6f}   valid Accuracy: {:.6f}"
+        print("\r\nEpoch: {}|===>Train Loss: {:.8f}   Train Accuracy: {:.6f}   valid Accuracy: {:.6f}\r\n"
               .format(epoch, cls_loss_.avg, accuracy_.avg, accuracy_valid_.avg))
 
         return cls_loss_.avg, accuracy_.avg, accuracy_valid_.avg

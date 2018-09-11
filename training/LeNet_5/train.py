@@ -80,8 +80,14 @@ if __name__ == '__main__':
     logger = Logger(config.save_path)
     trainer = LeNet_5Trainer(config.lr, train_loader, valid_x, valid_y, model, optimizer, scheduler, logger, device)
 
-    for epoch in range(1, config.nEpochs + 1):
+    epoch_dict = 1
+    model_dict, optimizer_dict, epoch_dict= checkpoint.load_checkpoint('F:\PycharmProjects\HCCR\\results\Lenet_5\log_bs64_lr0.010_072402\check_point\checkpoint_005.pth')
+    model.load_state_dict(model_dict)
+    optimizer.load_state_dict(optimizer_dict)
+
+
+    for epoch in range(epoch_dict, config.nEpochs + 1):
         cls_loss_, accuracy= trainer.train(epoch)
-        checkpoint.save_model(model, index=epoch)
+        checkpoint.save_checkpoint(model, optimizer, epoch=epoch, index=epoch, tag="123123")
 
 

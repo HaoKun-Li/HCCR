@@ -2,9 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a01a3ad1-abc3-463e-bdb1-c0e784a9ef1a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/models/AlexNet_CWA.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/AlexNet_gap.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/AlexNet_gap_SE.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/MA_CNN.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/AlexNet_MA/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/AlexNet_5_ST.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/AlexNet_ST.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/checkpoint.py" beforeDir="false" afterPath="$PROJECT_DIR$/checkpoint.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/AlexNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/AlexNet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/AlexNet_ST.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/AlexNet_ST.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/LeNet_5.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/LeNet_5.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/lossfn.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/lossfn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/imagedb.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/imagedb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/AlexNet/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/AlexNet/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/AlexNet/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/AlexNet/trainer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/LeNet_5/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/LeNet_5/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/LeNet_5/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/LeNet_5/train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,11 +68,11 @@
     <session id="-1685884287">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
-          <entry key="project.open.time.0" value="4" />
+          <entry key="project.closed" value="6" />
+          <entry key="project.open.time.0" value="5" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -67,7 +80,7 @@
           <entry key="c" value="1" />
           <entry key="gitignore" value="2" />
           <entry key="png" value="1" />
-          <entry key="py" value="67" />
+          <entry key="py" value="147" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -75,20 +88,20 @@
           <entry key="C++" value="1" />
           <entry key="Image" value="1" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="67" />
+          <entry key="Python" value="147" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="10" />
-          <entry key="Python" value="7940" />
+          <entry key="Python" value="16691" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="3" />
           <entry key="gitignore" value="7" />
-          <entry key="py" value="7940" />
+          <entry key="py" value="16691" />
         </counts>
       </usages-collector>
     </session>
@@ -96,31 +109,31 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/imagedb.py">
+        <entry file="file://$PROJECT_DIR$/models/MA_CNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2190">
-              <caret line="235" lean-forward="true" selection-start-line="235" selection-end-line="235" />
+            <state relative-caret-position="3631">
+              <caret line="232" lean-forward="true" selection-start-line="232" selection-end-line="232" />
               <folding>
-                <element signature="e#25#34#0" expanded="true" />
+                <marker date="1536583978251" expanded="true" signature="4117:4825" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/training/AlexNet/config.py">
+        <entry file="file://$PROJECT_DIR$/training/LeNet_5/train.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="240">
-              <caret line="8" column="106" selection-start-line="8" selection-start-column="106" selection-end-line="8" selection-end-column="106" />
+              <caret line="10" column="33" lean-forward="true" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/models/AlexNet_ST.py">
+        <entry file="file://$PROJECT_DIR$/models/lossfn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
-              <caret line="83" column="38" lean-forward="true" selection-start-line="83" selection-start-column="38" selection-end-line="83" selection-end-column="38" />
+            <state relative-caret-position="240">
+              <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
               <folding>
                 <element signature="e#24#36#0" expanded="true" />
               </folding>
@@ -129,13 +142,35 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/training/AlexNet/train.py">
+        <entry file="file://$PROJECT_DIR$/training/AlexNet_MA/trainer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="60" column="17" lean-forward="true" selection-start-line="60" selection-start-column="17" selection-end-line="60" selection-end-column="17" />
+            <state relative-caret-position="2970">
+              <caret line="118" column="34" selection-start-line="118" selection-start-column="34" selection-end-line="118" selection-end-column="34" />
+              <folding>
+                <element signature="e#24#36#0" expanded="true" />
+                <marker date="1536651163797" expanded="true" signature="3210:4178" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/training/AlexNet_MA/train.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="842">
+              <caret line="100" column="82" selection-start-line="100" selection-start-column="82" selection-end-line="100" selection-end-column="82" />
               <folding>
                 <element signature="e#24#36#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/checkpoint.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="781">
+              <caret line="118" column="11" selection-start-line="118" selection-start-column="11" selection-end-line="118" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -160,36 +195,44 @@
         <option value="$PROJECT_DIR$/training/LeNet_5.py" />
         <option value="$PROJECT_DIR$/models/AlexNet_real.py" />
         <option value="$PROJECT_DIR$/models/__init__.py" />
-        <option value="$PROJECT_DIR$/models/LeNet_5.py" />
-        <option value="$PROJECT_DIR$/models/lossfn.py" />
         <option value="$PROJECT_DIR$/preprocessing/__init__.py" />
         <option value="$PROJECT_DIR$/tools/__init__.py" />
         <option value="$PROJECT_DIR$/tools/logger.py" />
         <option value="$PROJECT_DIR$/tools/utils.py" />
         <option value="$PROJECT_DIR$/training/LeNet_5/trainer.py" />
-        <option value="$PROJECT_DIR$/training/LeNet_5/train.py" />
         <option value="$PROJECT_DIR$/training/__init__.py" />
-        <option value="$PROJECT_DIR$/checkpoint.py" />
         <option value="$PROJECT_DIR$/config.py" />
-        <option value="$PROJECT_DIR$/training/AlexNet/trainer.py" />
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/test/nonlinear_i1.py" />
         <option value="$PROJECT_DIR$/test/add.c" />
-        <option value="$PROJECT_DIR$/models/AlexNet.py" />
         <option value="$PROJECT_DIR$/test/nonlinear_1D.py" />
         <option value="$PROJECT_DIR$/test/gradient.py" />
         <option value="$PROJECT_DIR$/training/AlexNet/config.py" />
         <option value="$PROJECT_DIR$/models/AlexNet_5_ST.py" />
-        <option value="$PROJECT_DIR$/training/AlexNet/train.py" />
-        <option value="$PROJECT_DIR$/tools/imagedb.py" />
-        <option value="$PROJECT_DIR$/training/LeNet_5/config.py" />
         <option value="$PROJECT_DIR$/models/AlexNet_ST.py" />
+        <option value="$PROJECT_DIR$/models/AlexNet.py" />
+        <option value="$PROJECT_DIR$/models/AlexNet_CWA.py" />
+        <option value="$PROJECT_DIR$/models/LeNet_5.py" />
+        <option value="$PROJECT_DIR$/training/AlexNet/trainer.py" />
+        <option value="$PROJECT_DIR$/models/AlexNet_gap.py" />
+        <option value="$PROJECT_DIR$/training/AlexNet/train.py" />
+        <option value="$PROJECT_DIR$/training/AlexNet_MA.py" />
+        <option value="$PROJECT_DIR$/models/AlexNet_gap_SE.py" />
+        <option value="$PROJECT_DIR$/tools/imagedb.py" />
+        <option value="$PROJECT_DIR$/models/lossfn.py" />
+        <option value="$PROJECT_DIR$/models/MA_CNN.py" />
+        <option value="$PROJECT_DIR$/training/AlexNet_MA/config.py" />
+        <option value="$PROJECT_DIR$/training/LeNet_5/config.py" />
+        <option value="$PROJECT_DIR$/checkpoint.py" />
+        <option value="$PROJECT_DIR$/training/LeNet_5/train.py" />
+        <option value="$PROJECT_DIR$/training/AlexNet_MA/train.py" />
+        <option value="$PROJECT_DIR$/training/AlexNet_MA/trainer.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1912" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
@@ -221,7 +264,7 @@
               <item name="HCCR" type="b2602c69:ProjectViewProjectNode" />
               <item name="HCCR" type="462c0819:PsiDirectoryNode" />
               <item name="training" type="462c0819:PsiDirectoryNode" />
-              <item name="AlexNet" type="462c0819:PsiDirectoryNode" />
+              <item name="AlexNet_MA" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -231,7 +274,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../HelloWorld" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RunDashboard">
@@ -246,8 +289,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.train (1)">
-    <configuration name="gradient" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.train (2)">
+    <configuration name="MA_CNN" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="HandWriteClassificaiton" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -255,11 +298,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/models" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/gradient.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/models/MA_CNN.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -289,27 +332,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="nonlinear_1D" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="HandWriteClassificaiton" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/nonlinear_1D.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="train (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="HandWriteClassificaiton" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -323,6 +345,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/training/AlexNet/train.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="train (2)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="HandWriteClassificaiton" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/training/AlexNet_MA" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/training/AlexNet_MA/train.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -355,17 +398,17 @@
     <list>
       <item itemvalue="Python.train" />
       <item itemvalue="Python.train (1)" />
-      <item itemvalue="Python.nonlinear_1D" />
-      <item itemvalue="Python.gradient" />
       <item itemvalue="Python.imagedb" />
+      <item itemvalue="Python.MA_CNN" />
+      <item itemvalue="Python.train (2)" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train (1)" />
-        <item itemvalue="Python.imagedb" />
-        <item itemvalue="Python.gradient" />
-        <item itemvalue="Python.nonlinear_1D" />
+        <item itemvalue="Python.train (2)" />
         <item itemvalue="Python.train" />
+        <item itemvalue="Python.train (1)" />
+        <item itemvalue="Python.MA_CNN" />
+        <item itemvalue="Python.imagedb" />
       </list>
     </recent_temporary>
   </component>
@@ -392,7 +435,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.115911484" />
@@ -437,18 +480,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/os.py" />
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/init.py" />
-    <entry file="file://$PROJECT_DIR$/training/LeNet_5/results/Lenet_5log_bs64_lr0.001_072402/check_point/model_001.pth" />
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/modules/loss.py" />
-    <entry file="file://$PROJECT_DIR$/models/AlexNet_real.py" />
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/modules/linear.py" />
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/modules/container.py" />
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/modules/module.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/multiprocessing/process.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/multiprocessing/context.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/multiprocessing/popen_spawn_win32.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/runpy.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/multiprocessing/spawn.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/torch/utils/data/dataloader.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/torch/nn/modules/container.py" />
@@ -457,13 +488,6 @@
     <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/torch/nn/functional.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/numpy/core/shape_base.py" />
     <entry file="file://$PROJECT_DIR$/models/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="23" selection-start-column="23" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/LeNet_5.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="23" selection-start-column="23" selection-end-column="23" />
@@ -484,31 +508,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/training/LeNet_5/trainer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="23" selection-start-column="23" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/training/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="23" selection-start-column="23" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/checkpoint.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="23" selection-start-column="23" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/training/LeNet_5/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="31" selection-start-line="31" selection-end-line="31" />
         </state>
       </provider>
     </entry>
@@ -558,13 +561,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32">
           <caret line="313" selection-start-line="313" selection-end-line="313" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/lossfn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
         </state>
       </provider>
     </entry>
@@ -622,24 +618,125 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/AlexNet.py">
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/modules/conv.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="661">
-          <caret line="56" column="31" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
+        <state relative-caret-position="170">
+          <caret line="300" selection-start-line="300" selection-end-line="300" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/LeNet_5.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/modules/container.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="90" selection-start-line="90" selection-end-line="90" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/h5py/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="35" selection-start-line="35" selection-end-line="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/AlexNet_CWA.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="4" column="28" lean-forward="true" selection-end-line="97" />
+          <folding>
+            <element signature="e#24#45#0" expanded="true" />
+            <marker date="1535946345993" expanded="true" signature="176:670" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/training/AlexNet_MA.py" />
+    <entry file="file://$PROJECT_DIR$/models/AlexNet_ST.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="87" column="7" lean-forward="true" selection-start-line="87" selection-start-column="7" selection-end-line="88" selection-end-column="91" />
+          <folding>
+            <element signature="e#24#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/AlexNet_gap_SE.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1232">
+          <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
+          <folding>
+            <element signature="e#24#45#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/training/AlexNet/trainer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-570">
-          <caret line="9" column="45" lean-forward="true" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
+        <state relative-caret-position="350">
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/AlexNet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1530">
+          <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="490" selection-start-line="490" selection-end-line="490" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/AlexNet_gap.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/training/AlexNet/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="60" column="17" lean-forward="true" selection-start-line="60" selection-start-column="17" selection-end-line="60" selection-end-column="17" />
+        <state relative-caret-position="2280">
+          <caret line="76" column="28" lean-forward="true" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
+          <folding>
+            <element signature="e#24#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/imagedb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="96" column="40" lean-forward="true" selection-start-line="96" selection-start-column="40" selection-end-line="96" selection-end-column="40" />
+          <folding>
+            <element signature="e#25#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/training/AlexNet_MA/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/training/LeNet_5/trainer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="44" column="31" lean-forward="true" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
           <folding>
             <element signature="e#24#36#0" expanded="true" />
           </folding>
@@ -648,8 +745,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/training/LeNet_5/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="8" column="104" lean-forward="true" selection-start-line="8" selection-start-column="104" selection-end-line="8" selection-end-column="104" />
+        <state relative-caret-position="390">
+          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -660,20 +757,55 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/imagedb.py">
+    <entry file="file://$PROJECT_DIR$/checkpoint.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2190">
-          <caret line="235" lean-forward="true" selection-start-line="235" selection-end-line="235" />
+        <state relative-caret-position="781">
+          <caret line="118" column="11" selection-start-line="118" selection-start-column="11" selection-end-line="118" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/training/LeNet_5/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="10" column="33" lean-forward="true" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/training/AlexNet_MA/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="842">
+          <caret line="100" column="82" selection-start-line="100" selection-start-column="82" selection-end-line="100" selection-end-column="82" />
           <folding>
-            <element signature="e#25#34#0" expanded="true" />
+            <element signature="e#24#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/AlexNet_ST.py">
+    <entry file="file://$PROJECT_DIR$/models/MA_CNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="83" column="38" lean-forward="true" selection-start-line="83" selection-start-column="38" selection-end-line="83" selection-end-column="38" />
+        <state relative-caret-position="3631">
+          <caret line="232" lean-forward="true" selection-start-line="232" selection-end-line="232" />
+          <folding>
+            <marker date="1536583978251" expanded="true" signature="4117:4825" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/training/AlexNet_MA/trainer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2970">
+          <caret line="118" column="34" selection-start-line="118" selection-start-column="34" selection-end-line="118" selection-end-column="34" />
+          <folding>
+            <element signature="e#24#36#0" expanded="true" />
+            <marker date="1536651163797" expanded="true" signature="3210:4178" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/lossfn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
           <folding>
             <element signature="e#24#36#0" expanded="true" />
           </folding>
