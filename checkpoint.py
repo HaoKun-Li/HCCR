@@ -7,7 +7,7 @@ import torch.nn as nn
 
 
 class CheckPoint(object):
-    """=
+    """
     check_point_params: model, optimizer, epoch
     """
 

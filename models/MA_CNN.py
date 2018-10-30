@@ -2,8 +2,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from training.AlexNet.config import Config
+from training.AlexNet_MA.config import Config
 import torch.nn.init as init
+import math
 
 
 class AlexNet_1(nn.Module):
@@ -43,10 +44,13 @@ class AlexNet_1(nn.Module):
             nn.BatchNorm2d(512),
             nn.ReLU(),
         )  # output shape(512, 3, 3)
-
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                init.xavier_normal_(m.weight.data)
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, math.sqrt(2. /n))
+            elif isinstance(m, nn.BatchNorm2d):
+                m.weight.data.fill_(1)
+                m.bias.data.zero_()
 
     def forward(self, x):
         x = self.conv1(x)
@@ -105,7 +109,11 @@ class Classify_part(nn.Module):
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                init.xavier_normal_(m.weight.data)
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, math.sqrt(2. /n))
+            elif isinstance(m, nn.BatchNorm2d):
+                m.weight.data.fill_(1)
+                m.bias.data.zero_()
 
     def forward(self, x):
         x = self.conv1(x)
@@ -115,6 +123,7 @@ class Classify_part(nn.Module):
         x = self.conv5(x)
         x = self.conv_f1(x)
         x = self.gap(x)
+        # print(self.conv_f1[1].weight.data)
         return x
 
 
@@ -134,6 +143,13 @@ class Channel_group_sub(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool1d(1)
         self.sigmoid = nn.Sigmoid()
         self.softmax = nn.Softmax(dim=1)
+
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                init.xavier_normal_(m.weight.data)
+            elif isinstance(m, nn.BatchNorm2d):
+                m.weight.data.fill_(1)
+                m.bias.data.zero_()
 
     def forward(self, x, y):
         b, c, _, _ = y.size()
@@ -239,6 +255,7 @@ class Classify(nn.Module):
         x_part3 = self.Classify_3(part[2]).view(x_ori.size(0), -1)
         x_part4 = self.Classify_4(part[3]).view(x_ori.size(0), -1)
         x = torch.cat((x_ori, x_part1, x_part2, x_part3, x_part4), 1)
+        # x = torch.cat((x_ori, x_ori, x_ori, x_ori, x_ori), 1)
         output = self.fc(x)
 
         return output

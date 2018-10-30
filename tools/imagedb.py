@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 
 import os
+from numpy import *
+from scipy import *
 import numpy as np
 import scipy.misc
 import struct
 from PIL import Image
-import random
-from training.AlexNet.config import Config
+from training.AlexNet_MA.config import Config
 import torch
 import cv2
 import time
 import torch.utils.data as data
 
 
-
 def png_loader(path):
     with open(path, 'rb') as f:
         img = Image.open(f)
         return img.convert('L')
+
 
 class HCDataset(data.Dataset):
     def __init__(self, image_annotation_file, prefix_path='', transform=None, is_train=False):
@@ -30,7 +31,6 @@ class HCDataset(data.Dataset):
         # if self.is_train:
         self.transform = transform
         self.loader = png_loader
-
 
     def load_image_set_index(self):
         """Get image index
@@ -47,7 +47,6 @@ class HCDataset(data.Dataset):
         with open(self.image_annotation_file, 'r') as f:
             image_set_index = [x.strip().split(' ')[0] for x in f.readlines()]
         return image_set_index
-
 
     def real_image_path(self, index):
         """Given image index, return full path
@@ -73,7 +72,6 @@ class HCDataset(data.Dataset):
         assert os.path.exists(
             image_file), 'Path does not exist: {}'.format(image_file)
         return image_file
-
 
     def load_annotations(self):
         """Load annotations
@@ -105,10 +103,8 @@ class HCDataset(data.Dataset):
             imdb.append(imdb_)
         return imdb
 
-
     def __len__(self):
         return self.num_images
-
 
     def __getitem__(self, idx):
         imdb_ = self.gt_imdb[idx]
@@ -117,10 +113,8 @@ class HCDataset(data.Dataset):
 
         if self.transform:
             image = self.transform(image)
-
-            # print(torch.max(image), torch.min(image))
-            image = self.gradient_feature_maps(image.numpy(), label)
-            image = torch.from_numpy(image)
+            # image = self.gradient_feature_maps(image.numpy(), label)
+            # image = torch.from_numpy(image)
 
         return image, label
 
@@ -130,7 +124,7 @@ class HCDataset(data.Dataset):
              [-2, 0, 2],
              [-1, 0, 1]]
         )
-        res = cv2.filter2D(image, -1, fil)/8
+        res = cv2.filter2D(image, -1, fil) / 8
         print(res[0][30][40:50])
         res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
         print(res[0][30][40:50])
@@ -142,18 +136,15 @@ class HCDataset(data.Dataset):
              [0, 0, 0],
              [1, 2, 1]]
         )
-        res = cv2.filter2D(image, -1, fil)/8
+        res = cv2.filter2D(image, -1, fil) / 8
         res = (res - np.min(res)) / (np.max(res) - np.min(res)) * 255
         return res
-
 
     def save_as_png(self, image, label, st):
         image = (image - np.min(image)) / (np.max(image) - np.min(image)) * 255
 
         im = Image.fromarray(image)
         im.convert('RGB').save(config.save_path + '/gradient_png/' + str(label) + '_' + str(st) + '.png')
-
-
 
     def gradient_feature_maps(self, image, label):
         fil_x = np.array(
@@ -168,8 +159,8 @@ class HCDataset(data.Dataset):
         )
 
         image = image[0]
-        res_x = cv2.filter2D(image, -1, fil_x)/4
-        res_y = cv2.filter2D(image, -1, fil_y)/4
+        res_x = cv2.filter2D(image, -1, fil_x) / 4
+        res_y = cv2.filter2D(image, -1, fil_y) / 4
         res_3 = -1 * res_x
         res_4 = -1 * res_y
         res_5 = 0.707 * res_x + 0.707 * res_y
@@ -194,14 +185,21 @@ class HCDataset(data.Dataset):
         return images
 
 
-
-
-
-
-
-
-
 config = Config()
+
+
+# select likely character set:
+# 海 47779
+# 梅 50103
+# 诲 48101
+# 悔 48090
+# 晦 48094
+# 酶 50104
+# 侮 52970
+# 每 50111
+
+# 霉 50105
+# 敏 50164
 
 
 # convert to png and record path
@@ -217,61 +215,192 @@ def preprocess_gnt():
     train_annotation = []
     train_annotation_path = os.path.join(config.dataPath, 'train_png_annotation.txt')
 
+    temp_1 = None
+    temp_2 = None
+
     if not os.path.exists(train_annotation_path):
-        for image, tagcode, file_name in read_from_gnt_dir(config.trainDataPath):
+        for img, tagcode, file_name in read_from_gnt_dir(config.trainDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
+            likely_character_Set = '海梅诲悔晦酶侮每'
+            if tagcode_unicode in likely_character_Set:
+            # if True:
+                # test
+                # im = Image.fromarray(image)
+                # im_path = os.path.join(train_png_path, file_name + '_orgin' + str(tagcode) + '.png')
+                # im.convert('L').save(im_path)
+                # test
 
-            #test
-            # im = Image.fromarray(image)
-            # im_path = os.path.join(train_png_path, file_name + '_orgin' + str(tagcode) + '.png')
-            # im.convert('L').save(im_path)
-            #test
+                # image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
+                # image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
+                # assert image.shape == (config.resize_size, config.resize_size)
+                # image = image.astype(np.float32)
 
-            # image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
-            # image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
-            # assert image.shape == (config.resize_size, config.resize_size)
-            # image = image.astype(np.float32)
+                # image = cluttered(image, 0.05)
 
-            image = resize_and_normalize_image(image)
+                # image = imperfect_cut(img, temp_1, temp_2)
+                # temp_2 = temp_1
+                # temp_1 = img
 
-            # image = padding_and_normalize_image(image)
+                image = resize_and_normalize_image(img)
+                # image = padding_and_normalize_image(image)
 
-            im = Image.fromarray(image)
-            im_path = os.path.join(train_png_path, file_name + '_' + str(tagcode) + '.png')
-            im.convert('L').save(im_path)
-            train_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode))
-            print(im_path)
-            png_loader(im_path)
+                # 添加椒盐噪声
+                # image = SaltAndPepper(image, 0.1)
 
+                # 添加高斯噪声
+                # image = addGaussianNoise(image, 0.1)
+
+                im = Image.fromarray(image).convert('L')
+                im_path = os.path.join(train_png_path, file_name + '_' + str(tagcode) + '.png')
+                im.save(im_path)
+                train_annotation.append(os.path.split(im_path)[1] + ' ' + str(tagcode))
+                print(im_path)
+                png_loader(im_path)
 
         with open(train_annotation_path, 'w') as f:
             for line in train_annotation:
-                f.write(line+'\n')
+                f.write(line + '\n')
 
     valid_annotation = []
     valid_annotation_path = os.path.join(config.dataPath, 'valid_png_annotation.txt')
     if not os.path.exists(valid_annotation_path):
-        for image, tagcode, file_name in read_from_gnt_dir(config.validDataPath):
+        for img, tagcode, file_name in read_from_gnt_dir(config.validDataPath):
             tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
+            likely_character_Set = '海梅诲悔晦酶侮每'
+            if tagcode_unicode in likely_character_Set:
+            # if True:
+                # image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
+                # image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
+                # assert image.shape == (config.resize_size, config.resize_size)
+                # image = image.astype(np.float32)
 
-            # image = forward_nonlinear_1d(src = image, dst_wid = config.resize_size-6, dst_hei = config.resize_size-6, ratio_preserve_func = 'SQUART')
-            # image = np.lib.pad(image, ((3, 3), (3, 3)), mode='constant', constant_values=0)
-            # assert image.shape == (config.resize_size, config.resize_size)
-            # image = image.astype(np.float32)
+                # image = cluttered(image, 0.05)
 
-            image = resize_and_normalize_image(image)
+                # image = imperfect_cut(img, temp_1, temp_2)
+                # temp_2 = temp_1
+                # temp_1 = img
 
-            # image = padding_and_normalize_image(image)
+                image = resize_and_normalize_image(img)
+                # image = padding_and_normalize_image(image)
 
-            im = Image.fromarray(image)
-            im_path = os.path.join(valid_png_path, file_name + '_' + str(tagcode) + '.png')
-            im.convert('L').save(im_path)
-            valid_annotation.append(os.path.split(im_path)[1]+' '+str(tagcode))
-            print(im_path)
+                # 添加椒盐噪声
+                # image = SaltAndPepper(image, 0.1)
+
+                # 添加高斯噪声
+                # image = addGaussianNoise(image, 0.1)
+
+                im = Image.fromarray(image).convert('L')
+                im_path = os.path.join(valid_png_path, file_name + '_' + str(tagcode) + '.png')
+                im.save(im_path)
+                valid_annotation.append(os.path.split(im_path)[1] + ' ' + str(tagcode))
+                print(im_path)
 
         with open(valid_annotation_path, 'w') as f:
             for line in valid_annotation:
-                f.write(line+'\n')
+                f.write(line + '\n')
+
+
+# 定义添加椒盐噪声的函数
+def SaltAndPepper(src, percetage):
+    SP_NoiseImg = src
+    SP_NoiseNum = int(percetage * src.shape[0] * src.shape[1])
+
+    for i in range(SP_NoiseNum):
+        randX = random.random_integers(0, src.shape[0] - 1)
+        randY = random.random_integers(0, src.shape[1] - 1)
+        if random.random_integers(0, 1) == 0:
+            SP_NoiseImg[randX, randY] = 0
+
+        else:
+
+            SP_NoiseImg[randX, randY] = 255
+
+    return SP_NoiseImg
+
+
+# 定义添加高斯噪声的函数
+def addGaussianNoise(image, percetage):
+    G_Noiseimg = image
+    G_NoiseNum = int(percetage * image.shape[0] * image.shape[1])
+
+    for i in range(G_NoiseNum):
+        temp_x = np.random.randint(10, 104)
+        temp_y = np.random.randint(10, 104)
+        G_Noiseimg[temp_x][temp_y] = 255
+
+    return G_Noiseimg
+
+
+# 添加影响标准化位置噪声
+def cluttered(img, percetage):
+    # 像素值范围0到1(Min-max normalization), 并使背景色为0（黑色）
+    img = (1 - (img - np.min(img)) / (np.max(img) - np.min(img))) * 255
+
+    # 补方
+    pad_size = abs(img.shape[0] - img.shape[1]) // 2
+    if img.shape[0] < img.shape[1]:
+        pad_dims = ((pad_size, pad_size), (0, 0))
+    else:
+        pad_dims = ((0, 0), (pad_size, pad_size))
+
+    img = np.lib.pad(img, pad_dims, mode='constant', constant_values=0)
+
+    rand_all = random.random_integers(0, img.shape[0])
+    rand_p = random.random_integers(0, rand_all)
+
+    pad_clu = ((rand_p, rand_all - rand_p), (rand_p, rand_all - rand_p))
+    img = np.lib.pad(img, pad_clu, mode='constant', constant_values=0)
+
+    SaltAndPepper(img, percetage)
+
+    # 缩放
+    img = scipy.misc.imresize(img, (config.resize_size - 6, config.resize_size - 6))
+    img = np.lib.pad(img, ((3, 3), (3, 3)), mode='constant', constant_values=0)
+    assert img.shape == (config.resize_size, config.resize_size)
+
+    img = img.astype(np.float32)
+    return img
+
+
+def imperfect_cut(img, temp_1, temp_2):
+    if temp_1 is None:
+        temp_1 = img
+    if temp_2 is None:
+        temp_2 = img
+    img_1 = resize_and_normalize_image(temp_1)
+    img_2 = resize_and_normalize_image(temp_2)
+    image = resize_and_normalize_image(img)  # <class 'numpy.ndarray'>
+
+    img_1 = img_1[:114, 86:111]
+    img_2 = img_2[:114, 3:28]
+    image = image[:114, 6:108]
+
+    img_1 = updownBias(img_1)
+    img_2 = updownBias(img_2)
+    image = updownBias(image)
+
+    image = np.concatenate((img_1, image, img_2), axis=1)
+
+    pad_dims = ((int((image.shape[1] - image.shape[0])/2), int((image.shape[1] - image.shape[0])/2)), (0, 0))
+    image = np.lib.pad(image, pad_dims, mode='constant', constant_values=0)
+    image = scipy.misc.imresize(image, (config.resize_size, config.resize_size))
+
+    return image
+
+
+def updownBias(img):
+    rand = np.random.randint(-10, 10)
+    if(rand < 0):
+        image = np.concatenate((img[-rand:114], np.zeros((-rand, img.shape[1]))), axis=0)
+
+    if (rand >0):
+        image = np.concatenate((np.zeros((rand, img.shape[1])), img[:-rand]), axis=0)
+
+    if(rand == 0):
+        image = img
+
+    return image
+
 
 # 读取图像和对应的汉字
 def read_from_gnt_dir(gnt_dir):
@@ -281,16 +410,14 @@ def read_from_gnt_dir(gnt_dir):
             header = np.fromfile(f, dtype='uint8', count=header_size)
             if not header.size:
                 break
-            sample_size = header[0] + (header[1]<<8) + (header[2]<<16) + (header[3]<<24)
-            tagcode = header[5] + (header[4]<<8)
+            sample_size = header[0] + (header[1] << 8) + (header[2] << 16) + (header[3] << 24)
+            tagcode = header[5] + (header[4] << 8)
             width = header[6] + (header[7] << 8)
             height = header[8] + (header[9] << 8)
-            if header_size + width*height != sample_size:
+            if header_size + width * height != sample_size:
                 break
-            image = np.fromfile(f, dtype='uint8', count=width*height).reshape((height, width))
+            image = np.fromfile(f, dtype='uint8', count=width * height).reshape((height, width))
             yield image, tagcode
-
-
 
     for file_name in os.listdir(gnt_dir):
         if file_name.endswith('.gnt'):
@@ -302,7 +429,7 @@ def read_from_gnt_dir(gnt_dir):
                     yield image, tagcode, file_name
 
 
- # 统计样本数
+# 统计样本数
 def count_num_sample():
     train_counter = 0
     valid_counter = 0
@@ -329,11 +456,14 @@ def count_num_sample():
         valid_counter += 1
 
     # 样本数
-    print('train_counter: '+str(train_counter), 'valid_counter: '+str(valid_counter))
+    print('train_counter: ' + str(train_counter), 'valid_counter: ' + str(valid_counter))
 
 
-#resize to 64*64
+# resize to 64*64
 def resize_and_normalize_image(img):
+    # 像素值范围0到1(Min-max normalization), 并使背景色为0（黑色）
+    img = (1 - (img - np.min(img)) / (np.max(img) - np.min(img))) * 255
+
     # 补方
     pad_size = abs(img.shape[0] - img.shape[1]) // 2
     if img.shape[0] < img.shape[1]:
@@ -341,25 +471,23 @@ def resize_and_normalize_image(img):
     else:
         pad_dims = ((0, 0), (pad_size, pad_size))
 
-    img = np.lib.pad(img, pad_dims, mode='constant', constant_values=255)
+    img = np.lib.pad(img, pad_dims, mode='constant', constant_values=0)
 
     # im = PIL.Image.fromarray(img)
     # im.convert('RGB').save('png/' + str(train_counter) + tagcode_unicode + '补方+pad_size_' + str(pad_size) + '.png')
 
     # 缩放
-    img = scipy.misc.imresize(img, (config.resize_size-6, config.resize_size-6))
+    img = scipy.misc.imresize(img, (config.resize_size, config.resize_size))
 
     # img = Image.fromarray(img)
     # img = img.resize((config.resize_size - 6, config.resize_size - 6))
     # img = np.asarray(img)
 
-    img = np.lib.pad(img, ((3, 3), (3, 3)), mode='constant', constant_values=255)
+    # img = np.lib.pad(img, ((3, 3), (3, 3)), mode='constant', constant_values=0)
     assert img.shape == (config.resize_size, config.resize_size)
 
     # img = img.flatten()
 
-    # 像素值范围0到1(Min-max normalization),最亮的设为0， 最暗设为255
-    img = (1 - (img - np.min(img)) / (np.max(img) - np.min(img))) * 255
     img = img.astype(np.float32)
     return img
 
@@ -415,28 +543,33 @@ def padding_and_normalize_image(img):
         return img
 
 
-
-
 def write_char_set():
-    if not os.path.exists(config.dataPath+'char_set'):
+    if not os.path.exists(config.dataPath + 'char_set'):
         char_set = []
         for image, tagcode, _ in read_from_gnt_dir(gnt_dir=config.trainDataPath):
+
             # tagcode_unicode = struct.pack('>H', tagcode).decode('gb2312')
+            # likely_character_Set = '海梅诲悔晦酶侮每'
+            # if tagcode_unicode in likely_character_Set:
+
+            #     if tagcode not in char_set:
+            #         char_set.append(tagcode)
+
             if tagcode not in char_set:
                 char_set.append(tagcode)
 
-        with open(config.dataPath+'char_set', 'w') as f:
+        with open(config.dataPath + 'char_set', 'w') as f:
             for line in char_set:
-                f.write(str(line)+' ')
+                f.write(str(line) + ' ')
             print("write char_set")
 
-        print('char_set_length: '+str(len(char_set)))
+        print('char_set_length: ' + str(len(char_set)))
 
 
 # 生成随机汉字列表
 def random_select():
     if not os.path.exists(config.save_path + 'random_char_set'):
-        with open(config.save_path+'char_set', 'r') as f:
+        with open(config.save_path + 'char_set', 'r') as f:
             char_set = f.read()
             print("read char_set")
 
@@ -454,12 +587,12 @@ def random_select():
             print("write random_char_set")
 
     else:
-        with open(config.save_path+'random_char_set', 'r') as f:
+        with open(config.save_path + 'random_char_set', 'r') as f:
             random_set = f.read()
             print("read random_char_set")
 
-    if len(random_set)!=config.random_size:
-        os.remove(config.save_path+'random_char_set')
+    if len(random_set) != config.random_size:
+        os.remove(config.save_path + 'random_char_set')
         random_select()
 
     else:
@@ -467,13 +600,12 @@ def random_select():
         print('len(random_set): ' + str(len(random_set)))
 
 
-#加载数据
+# 加载数据
 def load_data():
     def convert_to_one_hot(char):
         vector = np.zeros(len(random_set))
         vector[random_set.index(char)] = 1
         return vector
-
 
     with open(config.save_path + 'random_char_set', 'r') as f:
         random_set = f.read()
@@ -530,7 +662,7 @@ def aspect_radio_mapping(r1, dst_wid, dst_hei, ratio_preserve_func):
         return np.power(r1, 0.333)
 
     elif ratio_preserve_func == 'SINE':
-        return np.sqrt(np.sin(3.1415926*r1/2))
+        return np.sqrt(np.sin(3.1415926 * r1 / 2))
 
     else:
         return min(dst_wid, dst_hei) / max(dst_wid, dst_hei)
@@ -552,11 +684,11 @@ def forward_push_val(dst, dst_wid, dst_hei, val, x, y, xscale, yscale):
     t = min(max(t, 0), dst_hei - 1)
     b = min(max(b, 0), dst_hei - 1)
 
-    for j in range(t, b+1):
-        for i in range(l, r+1):
+    for j in range(t, b + 1):
+        for i in range(l, r + 1):
             # float intersect_area;
-            xg = min(i+1, fr) - max(i, fl)
-            yg = min(j+1, fb) - max(j, ft)
+            xg = min(i + 1, fr) - max(i, fl)
+            yg = min(j + 1, fb) - max(j, ft)
 
             if xg > 0 and yg > 0:
                 dst[j, i] += xg * yg * val
@@ -587,21 +719,20 @@ def forward_push_val2(dst, dst_wid, dst_hei, val, fl, ft, fr, fb, xscale, yscale
 
 
 def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
-
     src_wid = src.shape[1]
     src_hei = src.shape[0]
-    region = [0, 0, src_wid-1, src_hei-1]
+    region = [0, 0, src_wid - 1, src_hei - 1]
     m10 = 0
     m01 = 0
     u20 = 0
     u02 = 0
     constval = 0.001
-    threshold = 64 # smaller than 128 are considered as background pixel while others are foreground pixels.
+    threshold = 64  # smaller than 128 are considered as background pixel while others are foreground pixels.
     src = (1 - (src - np.min(src)) / (np.max(src) - np.min(src))) * 255
     dst = np.zeros([dst_hei, dst_wid])
 
-    for y in range(region[1], region[3]+1):
-        for x in range(region[0], region[2]+1):
+    for y in range(region[1], region[3] + 1):
+        for x in range(region[0], region[2] + 1):
             m10 += x * src[y][x]
             m01 += y * src[y][x]
 
@@ -609,17 +740,17 @@ def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
     if m00 == 0:
         return;
 
-    #xc, yc
+    # xc, yc
     xc = m10 / m00
     yc = m01 / m00
 
     # general u20, u02
-    for y in range(region[1], region[3]+1):
-        for x in range(region[0], region[2]+1):
+    for y in range(region[1], region[3] + 1):
+        for x in range(region[0], region[2] + 1):
             u20 += (x - xc) * (x - xc) * src[y][x]
             u02 += (y - yc) * (y - yc) * src[y][x]
 
-    #general w1, h1
+    # general w1, h1
     w1 = int(np.round(4.5 * np.sqrt(u20 / m00)))
     h1 = int(np.round(4.5 * np.sqrt(u02 / m00)))
 
@@ -639,7 +770,7 @@ def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
     hx = np.zeros([(r - l), 1])
     hy = np.zeros([(b - t), 1])
 
-    #general dx
+    # general dx
     for y in range(t, b):
         run_start = -1
         run_end = -1
@@ -652,17 +783,17 @@ def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
                     run_end = x
             else:
                 if run_start < 0:
-                    dx[y-t][x-l] = constval
-                else:
-                    d = 1. / (w1/4 + run_end - run_start +1)
                     dx[y - t][x - l] = constval
-                    for i in range(run_start, run_end+1):
+                else:
+                    d = 1. / (w1 / 4 + run_end - run_start + 1)
+                    dx[y - t][x - l] = constval
+                    for i in range(run_start, run_end + 1):
                         dx[y - t][i - l] = d
                     run_end = -1
                     run_start = -1
 
         if run_start > 0:
-            d = 1. / (w1/4 + run_end - run_start + 1)
+            d = 1. / (w1 / 4 + run_end - run_start + 1)
             for i in range(run_start, run_end + 1):
                 dx[y - t][i - l] = d
 
@@ -679,21 +810,21 @@ def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
                     run_end = y
             else:
                 if run_start < 0:
-                    dy[y-t][x-l] = constval
-                else:
-                    d = 1. / (h1/4 + run_end - run_start +1)
                     dy[y - t][x - l] = constval
-                    for i in range(run_start, run_end+1):
+                else:
+                    d = 1. / (h1 / 4 + run_end - run_start + 1)
+                    dy[y - t][x - l] = constval
+                    for i in range(run_start, run_end + 1):
                         dy[i - t][x - l] = d
                     run_end = -1
                     run_start = -1
 
         if run_start > 0:
-            d = 1. / (h1/4 + run_end - run_start + 1)
+            d = 1. / (h1 / 4 + run_end - run_start + 1)
             for i in range(run_start, run_end + 1):
                 dy[i - t][x - l] = d
 
-    #general dx_sum, dy_sum
+    # general dx_sum, dy_sum
     dx_sum = np.sum(dx)
     dy_sum = np.sum(dy)
 
@@ -701,16 +832,16 @@ def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
     py = (np.sum(dy, 1) / dy_sum)
     px = (np.sum(dx, 0) / dx_sum)
 
-    #hx, hy
+    # hx, hy
     for x in range(l, r):
         for i in range(l, x):
-            hx[x-l] += px[i-l]
+            hx[x - l] += px[i - l]
 
     for y in range(t, b):
         for j in range(t, y):
-            hy[y-t] +=py[j-t]
+            hy[y - t] += py[j - t]
 
-    r1 = min((r-l), (b-t)) / max((r-l), (b-t))
+    r1 = min((r - l), (b - t)) / max((r - l), (b - t))
     r2 = aspect_radio_mapping(r1, dst_wid, dst_hei, ratio_preserve_func)
 
     if w1 > h1:
@@ -721,7 +852,7 @@ def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
 
     else:
         h2 = dst_hei
-        w2 = int(h2*r2)
+        w2 = int(h2 * r2)
         xoffset = (dst_wid - w2) / 2
         yoffset = 0
 
@@ -731,17 +862,18 @@ def forward_nonlinear_1d(src, dst_wid, dst_hei, ratio_preserve_func):
     # forward mapping
     for y in range(t, b):
         for x in range(l, r):
-            x1 = w2 * hx[x-l]
-            y1 = h2 * hy[y-t]
+            x1 = w2 * hx[x - l]
+            y1 = h2 * hy[y - t]
             # if src[y][x] > threshold:
             #     src[y][x] = src[y][x] # todo
 
-            if y == b-1 or x == r-1:
+            if y == b - 1 or x == r - 1:
                 dst = forward_push_val(dst, dst_wid, dst_hei, src[y][x], x1 + xoffset, y1 + yoffset, xscale, yscale)
 
             else:
                 x2 = w2 * hx[x - l + 1]
                 y2 = h2 * hy[y - t + 1]
-                dst = forward_push_val2(dst, dst_wid, dst_hei, src[y][x], x1 + xoffset, y1 + yoffset, x2 + xoffset, y2 + yoffset, xscale, yscale)
+                dst = forward_push_val2(dst, dst_wid, dst_hei, src[y][x], x1 + xoffset, y1 + yoffset, x2 + xoffset,
+                                        y2 + yoffset, xscale, yscale)
 
     return dst

@@ -81,7 +81,7 @@ if __name__ == '__main__':
     trainer = LeNet_5Trainer(config.lr, train_loader, valid_x, valid_y, model, optimizer, scheduler, logger, device)
 
     epoch_dict = 1
-    model_dict, optimizer_dict, epoch_dict= checkpoint.load_checkpoint('F:\PycharmProjects\HCCR\\results\Lenet_5\log_bs64_lr0.010_072402\check_point\checkpoint_005.pth')
+    model_dict, optimizer_dict, epoch_dict= checkpoint.load_checkpoint(os.path.join(checkpoint.save_path, 'checkpoint_005.pth'))
     model.load_state_dict(model_dict)
     optimizer.load_state_dict(optimizer_dict)
 
